@@ -22,6 +22,22 @@ def hashFile(filename)
   Digest::MD5.hexdigest(File.read(filename)+Time.now.to_s) # Include timestamp in the hash to ensure unicity
 end
 
+def replaceUnsetValues(hash)
+  h=hash
+  hash.each do |k,v|
+    if v.is_a? Hash
+      h[k]=replaceUnsetValues(v).compact!
+    elsif (v.nil? || v.to_s.strip.empty? || v.to_s.downcase=="unknown")
+        h[k]=nil
+    end
+  end
+  return h
+end
+
+def cleanExifData(hash)
+  replaceUnsetValues(hash).compact!
+end
+
 def duplicateFileile(filename, filedir)
   hash = hashFile(filename)
   FileUtils.mkdir_p(filedir) unless File.exists?(filedir)
@@ -40,8 +56,12 @@ end
 post '/exif/info' do
     result = nil
     flatJson = false
+    includeNull = false
     if params.include?('flat_json')
-      flatJson=(params[:flat_json].to_s == "true")
+      includeNull=(params[:flat_json].to_s == "true")
+    end
+    if params.include?('include_null')
+      flatJson=(params[:include_null].to_s == "true")
     end
     if params.include?('file')
       tempfile = params[:file][:tempfile]
@@ -52,6 +72,9 @@ post '/exif/info' do
           exif = getExifInfo(filename)
           if flatJson
             exif = flatten_hash(exif)
+          end
+          if includeNull
+            exif=cleanExifData(exif)
           end
           result = exif.to_json
       rescue Exception => e
