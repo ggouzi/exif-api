@@ -1,0 +1,21 @@
+body {
+    position: relative;
+}
+.affix {
+    top: 20px;
+    z-index: 9999 !important;
+}
+div.col-sm-9 div {
+    font-size: 28px;
+}
+
+.section {
+  color: #000;
+}
+
+@media screen and (max-width: 810px) {
+  #section1, #section2, #section3, #section41, #section42  {
+      margin-left: 150px;
+      margin-top: 30px;
+  }
+}

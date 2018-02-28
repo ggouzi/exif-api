@@ -1,0 +1,100 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <title>Bootstrap Example</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="main.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   </head>
+   <body data-spy="scroll" data-target="#myScrollspy" data-offset="15">
+      <div class="container-fluid" style="background-color:#2196F3;color:#fff;height:160px;">
+         <h1>Scrollspy & Affix Example</h1>
+      </div>
+      <br>
+      <div class="container">
+         <div class="row">
+            <nav class="col-sm-3" id="myScrollspy">
+               <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
+                  <li><a href="#section1">Section 1</a></li>
+                  <li><a href="#section2">Section 2</a></li>
+                  <li><a href="#section3">Section 3</a></li>
+                  <li><a href="#section4">Section 4</a></li>
+               </ul>
+            </nav>
+            <div class="col-sm-9">
+               <div id="section1" class="section">
+                  <h1>Section 1</h1>
+                  <h2>Defintition</h2>
+                  <h2>Input</h2>
+                  <h2>Output</h2>
+                  <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+               </div>
+               <div id="section2" class="section">
+                  <h1>Section 2</h1>
+                  <h2>Defintition</h2>
+                  <h2>Input</h2>
+                  <h2>Output</h2>
+                  <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+               </div>
+               <div id="section3" class="section">
+                  <h1>Section 3</h1>
+                  <h2>Defintition</h2>
+                  <h2>Input</h2>
+                  <h2>Output</h2>
+                  <div class="col-md-12">
+                     <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
+                        <li class="nav-item"><a href="#badrequest" aria-controls="badrequest" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 400 Bad Request </a></li>
+                        <li class="nav-item"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 403 Forbidden </a></li>
+                     </ul>
+                     <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="home">
+                           <pre>{
+    "upc": "5705831011120",
+    "name": "Pink highlighter",
+    "alias": "Highlighter",
+    "description": "It's a pink highlighter. Here's some more information as well.",
+    "brand": "Q-CONNECT",
+    "msrp": 0.99,
+    "status": 200,
+    "error": false
+}
+</pre>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="badrequest">
+                           <pre>{
+    "message": "Bad Request. The code you are trying to enter does not contain all digits.",
+    "status": 400,
+    "error": true
+}
+</pre>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="profile">
+                           <pre>{
+    "message": "Forbidden. Are you using the right authentication method and API token?",
+    "status": 403,
+    "error": true
+}
+</pre>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div id="section4" class="section">
+                  <h1>Section 4-1</h1>
+                  <h2>Defintition</h2>
+                  <h2>Input</h2>
+                  <h2>Output</h2>
+                  <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
+
