@@ -5,6 +5,8 @@ require 'digest/md5'
 
 set :port, ENV["PORT"] || 3000
 
+EXCLUDE_LIST = [ 'ThumbnailImage', 'DataDump' ]
+
 # Based on https://stackoverflow.com/questions/23521230/flattening-nested-hash-to-a-single-hash-with-ruby-rails
 def flatten_hash(hash)
   hash.each_with_object({}) do |(k, v), h|
@@ -16,6 +18,13 @@ def flatten_hash(hash)
       h[k] = v
     end
    end
+end
+
+def to_snake_case(camel_cased_word)
+ camel_cased_word.to_s.gsub(/::/, '/').
+   gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+   gsub(/([a-z\d])([A-Z])/,'\1_\2').
+   tr("-", "_").downcase
 end
 
 def hashFile(filename)
@@ -53,16 +62,8 @@ get '/' do
   'Welcome to ExifExtractor!'
 end
 
-post '/exif/info' do
+post '/exif/read/simple' do
     result = nil
-    flatJson = false
-    includeNull = false
-    if params.include?('flat_json')
-      includeNull=(params[:flat_json].to_s == "true")
-    end
-    if params.include?('include_null')
-      flatJson=(params[:include_null].to_s == "true")
-    end
     if params.include?('file')
       tempfile = params[:file][:tempfile]
       filename = params[:file][:filename]
@@ -70,12 +71,6 @@ post '/exif/info' do
       begin
       	  duplicateFileile(tempfile, save_dir)
           exif = getExifInfo(filename)
-          if flatJson
-            exif = flatten_hash(exif)
-          end
-          if includeNull
-            exif=cleanExifData(exif)
-          end
           result = exif.to_json
       rescue Exception => e
           result = {:status => 500, :error_message => e.message}.to_json
@@ -87,16 +82,35 @@ post '/exif/info' do
     result
 end
 
-def getExifInfo(filename)
+post '/exif/read/raw' do
+    result = nil
+    if params.include?('file')
+      tempfile = params[:file][:tempfile]
+      filename = params[:file][:filename]
+      save_dir = "tmp"
+      begin
+          duplicateFileile(tempfile, save_dir)
+          exif = getRawExifInfo(filename)
+          result = exif.to_json
+      rescue Exception => e
+          result = {:status => 500, :error_message => e.message}.to_json
+      end
+    else
+      result = {:status => 422, :error_message => "Missing file parameter"}.to_json
+    end
 
+    result
+end
+
+def getRawExifInfo(filename)
   data = MiniExiftool.new(filename)
+  exif=data.to_hash.delete_if { |k,v| EXCLUDE_LIST.include? k }
+  exif.each { |k,v| k=to_snake_case(k) }
+  return exif.sort.to_h
+end
 
-  puts "-----"
-  data.tags.each do |tag|
-    puts "#{tag}:         #{data[tag]}"
-  end
-  puts "-----"
-
+def getExifInfo(filename)
+  data = MiniExiftool.new(filename)
   exif=Hash.new()
   gps=Hash.new()
   technical=Hash.new()
@@ -136,6 +150,5 @@ def getExifInfo(filename)
   gps[:longitude_ref]=data.gps_longitude_ref
   exif[:gps]=gps
 
-  return exif
-
+  return exif.sort.to_h
 end

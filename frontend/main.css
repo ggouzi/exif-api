@@ -1,12 +1,10 @@
 body {
     position: relative;
 }
+
 .affix {
     top: 20px;
     z-index: 9999 !important;
-}
-div.col-sm-9 div {
-    font-size: 28px;
 }
 
 .section {
@@ -18,4 +16,19 @@ div.col-sm-9 div {
       margin-left: 150px;
       margin-top: 30px;
   }
+}
+
+footer {
+  margin-top: 60px;
+  height: 150px;
+  width: 100%;
+  padding-top: 20px;
+}
+
+footer div {
+  border-top: 2px solid rgba(2, 39, 63, 0.5);
+  width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 10px;
 }

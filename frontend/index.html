@@ -6,55 +6,62 @@
       <title>Bootstrap Example</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="main.css">
+      <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet"/>
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <link href="prism.css" rel="stylesheet" />
+      <script src="prism.js"></script>
+      <link rel="stylesheet" href="main.css">
    </head>
    <body data-spy="scroll" data-target="#myScrollspy" data-offset="15">
       <div class="container-fluid" style="background-color:#2196F3;color:#fff;height:160px;">
-         <h1>Scrollspy & Affix Example</h1>
+         <h1>EXIF Data API</h1>
       </div>
       <br>
       <div class="container">
+         <div class="page-header">
+            <h1 align="center">API Reference</h1>
+         </div>
          <div class="row">
             <nav class="col-sm-3" id="myScrollspy">
                <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
-                  <li><a href="#section1">Section 1</a></li>
-                  <li><a href="#section2">Section 2</a></li>
-                  <li><a href="#section3">Section 3</a></li>
-                  <li><a href="#section4">Section 4</a></li>
+                  <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">POST /exif/read<span class="caret"></span></a>
+                   <ul class="dropdown-menu">
+                    <li><a href="#section11">POST /exif/read/simple</a></li>
+                    <li><a href="#section12">POST /exif/read/all</a></li>
+                    <li><a href="#section13">POST /exif/read/raw</a></li>
+                  </ul>
+                </li>
+                  <li><a href="#section2">POST /exif/update</a></li>
+                  <li><a href="#section3">POST /exif/switch</a></li>
+                  <li><a href="#section4">POST /exif/delete</a></li>
                </ul>
             </nav>
             <div class="col-sm-9">
-               <div id="section1" class="section">
-                  <h1>Section 1</h1>
-                  <h2>Defintition</h2>
-                  <h2>Input</h2>
-                  <h2>Output</h2>
+               <div id="section11" class="section">
+                  <h2>POST /exif/read/simple</h2>
+                  <h3>Definition</h3>
+                  <h3>Input</h3>
+                  <h3>Output</h3>
                   <p>Try to scroll this section and look at the navigation list while scrolling!</p>
                </div>
-               <div id="section2" class="section">
-                  <h1>Section 2</h1>
-                  <h2>Defintition</h2>
-                  <h2>Input</h2>
-                  <h2>Output</h2>
+               <div id="section12" class="section">
+                  <h2>POST /exif/read/all</h2>
+                  <h3>Definition</h3>
+                  <h3>Input</h3>
+                  <h3>Output</h3>
                   <p>Try to scroll this section and look at the navigation list while scrolling!</p>
                </div>
-               <div id="section3" class="section">
-                  <h1>Section 3</h1>
-                  <h2>Defintition</h2>
-                  <h2>Input</h2>
-                  <h2>Output</h2>
+               <div id="section13" class="section">
+                  <h2>POST /exif/read/raw</h2>
                   <div class="col-md-12">
-                     <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
-                        <li class="nav-item"><a href="#badrequest" aria-controls="badrequest" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 400 Bad Request </a></li>
-                        <li class="nav-item"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 403 Forbidden </a></li>
-                     </ul>
-                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade in active" id="home">
-                           <pre>{
+                     <h3>Definition</h3>
+                     No parsing, no process on the output
+                  </div>
+                  <div class="col-md-12">
+                     <h3>Input</h3>
+                     <pre><code class="language-json">{
     "upc": "5705831011120",
     "name": "Pink highlighter",
     "alias": "Highlighter",
@@ -63,37 +70,221 @@
     "msrp": 0.99,
     "status": 200,
     "error": false
-}
+}</code>
+</pre>
+                  </div>
+                  <div class="col-md-12">
+                     <h2>Output</h2>
+                     <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
+                        <li class="nav-item"><a href="#unprocessable_entity" aria-controls="unprocessable_entity" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 422 Unprocessable Entity </a></li>
+                        <li class="nav-item"><a href="#server_error" aria-controls="server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
+                     </ul>
+                     <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="home">
+                           <pre><code class="language-json">
+{
+  "AFAreaMode": "Single Area",
+  "AFPoint": "Center",
+  "AFPointsInFocus": "(none)",
+  "ActiveD-Lighting": "Off",
+  "Aperture": 4.5,
+  "AuxiliaryLens": "Off",
+  "BitsPerSample": 8,
+  "Brightness": "n/a",
+  "CircleOfConfusion": "0.006 mm",
+  "ColorComponents": 3,
+  "ColorMode": "Color",
+  "ColorSpace": "sRGB",
+  "ComponentsConfiguration": "Y, Cb, Cr, -",
+  "Compression": "JPEG (old-style)",
+  "Contrast": "Normal",
+  "CreateDate": "2008-10-22 16:29:49 +0200",
+  "CustomRendered": "Normal",
+  "DateTimeOriginal": "2008-10-22 16:29:49 +0200",
+  "DigitalZoom": 1,
+  "DigitalZoomRatio": 0,
+  "DistortionControl": "Off",
+  "EncodingProcess": "Baseline DCT, Huffman coding",
+  "ExifByteOrder": "Little-endian (Intel, II)",
+  "ExifImageHeight": 480,
+  "ExifImageWidth": 640,
+  "ExifToolVersion": 10.25,
+  "ExifVersion": 220,
+  "ExposureCompensation": 0,
+  "ExposureMode": "Auto",
+  "ExposureProgram": "Program AE",
+  "ExposureTime": "1/178",
+  "FNumber": 4.5,
+  "FOV": "65.5 deg",
+  "FaceDetectFrameSize": "320 240",
+  "FacesDetected": 0,
+  "FileAccessDate": "2018-03-01 07:42:07 +0100",
+  "FileInodeChangeDate": "2018-02-26 22:46:37 +0100",
+  "FileModifyDate": "2018-02-26 22:46:37 +0100",
+  "FilePermissions": "rw-rw-r--",
+  "FileSize": "155 kB",
+  "FileSource": "Digital Camera",
+  "FileType": "JPEG",
+  "FileTypeExtension": "jpg",
+  "FilterEffect": "n/a",
+  "Flash": "Off, Did not fire",
+  "FlashSetting": "",
+  "FlashpixVersion": 100,
+  "FocalLength": "6.0 mm",
+  "FocalLength35efl": "6.0 mm (35 mm equivalent: 28.0 mm)",
+  "FocalLengthIn35mmFormat": "28 mm",
+  "FocusMode": "AF-S",
+  "GPSAltitudeRef": "Above Sea Level",
+  "GPSDateStamp": "2008:10:23",
+  "GPSDateTime": "2008-10-23 14:28:17 UTC",
+  "GPSImgDirectionRef": "Unknown ()",
+  "GPSLatitude": "43 deg 28' 1.76\" N",
+  "GPSLatitudeRef": "North",
+  "GPSLongitude": "11 deg 53' 7.42\" E",
+  "GPSLongitudeRef": "East",
+  "GPSMapDatum": "WGS-84   ",
+  "GPSPosition": "43 deg 28' 1.76\" N, 11 deg 53' 7.42\" E",
+  "GPSSatellites": "06",
+  "GPSTimeStamp": "14:28:17.24",
+  "GainControl": "None",
+  "HueAdjustment": "n/a",
+  "HyperfocalDistance": "1.24 m",
+  "ISO": 64,
+  "ISOSelection": "Auto",
+  "ImageAdjustment": "Normal",
+  "ImageDescription": "",
+  "ImageHeight": 480,
+  "ImageSize": "640x480",
+  "ImageStabilization": "VR-On",
+  "ImageWidth": 640,
+  "InteropIndex": "R98 - DCF basic file (sRGB)",
+  "InteropVersion": 100,
+  "LightSource": "Unknown",
+  "LightValue": 12.5,
+  "MIMEType": "image/jpeg",
+  "Make": "NIKON",
+  "MakerNoteVersion": 2.1,
+  "MaxApertureValue": 2.7,
+  "Megapixels": 0.307,
+  "MeteringMode": "Multi-segment",
+  "Model": "COOLPIX P6000",
+  "ModifyDate": "2008-11-01 21:15:07 +0100",
+  "NEFBitDepth": "n/a (JPEG)",
+  "NikonCaptureVersion": "COOLPIX P6000V1.0",
+  "NoiseReduction": "Off",
+  "Orientation": "Horizontal (normal)",
+  "PictureControlAdjust": "Default Settings",
+  "PictureControlBase": "Standard",
+  "PictureControlName": "Standard",
+  "PictureControlQuickAdjust": "Normal",
+  "PictureControlVersion": 100,
+  "Quality": "Fine",
+  "RatingPercent": 0,
+  "ResolutionUnit": "inches",
+  "RetouchHistory": "None",
+  "Saturation": "Normal",
+  "ScaleFactor35efl": 4.7,
+  "SceneAssist": "",
+  "SceneCaptureType": "Standard",
+  "SceneMode": "",
+  "SceneType": "Directly photographed",
+  "Sharpness": "Normal",
+  "ShutterSpeed": "1/178",
+  "Software": "Nikon Transfer 1.1 W",
+  "SubjectDistanceRange": "Unknown",
+  "ThumbnailLength": 6339,
+  "ThumbnailOffset": 4560,
+  "ToneComp": "Normal",
+  "ToningEffect": "n / a ",
+  "ToningSaturation": "n / a ",
+  "UserComment": " ",
+  "WhiteBalance": "Auto ",
+  "XMPToolkit": "Public XMP Toolkit Core 3.5 ",
+  "XResolution": 300,
+  "YCbCrPositioning": "Centered",
+  "YCbCrSubSampling": "YCbCr4: 2: 2(2 1)",
+  "YResolution ": 300
+}</code>
 </pre>
                         </div>
-                        <div role="tabpanel" class="tab-pane fade in" id="badrequest">
-                           <pre>{
-    "message": "Bad Request. The code you are trying to enter does not contain all digits.",
-    "status": 400,
+                        <div role="tabpanel" class="tab-pane fade in" id="unprocessable_entity">
+                           <pre><code class="language-json">{
+    "message": "Unprocessable Entity: Missing file parameter",
+    "status": 422,
     "error": true
-}
+}</code>
 </pre>
                         </div>
-                        <div role="tabpanel" class="tab-pane fade in" id="profile">
-                           <pre>{
-    "message": "Forbidden. Are you using the right authentication method and API token?",
-    "status": 403,
+                        <div role="tabpanel" class="tab-pane fade in" id="server_error">
+                           <pre><code class="language-json">{
+    "message": "Internal Server Error: ...",
+    "status": 500,
     "error": true
-}
+}</code>
 </pre>
                         </div>
                      </div>
+                     <h2>Example</h2>
+                     </pre>
+                  </div>
+                  <div class="col-md-12">
+                     <div role="tabpanel" class="tab-pane fade in" id="example1">
+                        <pre><code class="language-bash">
+curl -X POST -H Accept:application/json \
+ -F "file=@test3.JPG" \
+ -F "flat_json=true" \
+ -F "include_null=false" \
+ http://localhost:3000/exif/info
+</code>
+</pre>
+                     </div>
                   </div>
                </div>
+               <div id="section2" class="section">
+                  <h2>POST /exif/update</h2>
+                  <h3>
+                  Definition</h2>
+                  <h3>
+                  Input</h2>
+                  <h3>
+                  Output</h2>
+                  <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+               </div>
+               <div id="section3" class="section">
+                  <h2>POST /exif/switch</h2>
+                  <h3>
+                  Definition</h2>
+                  <h3>
+                  Input</h2>
+                  <h3>
+                  Output</h2>
+                  <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+               </div>
                <div id="section4" class="section">
-                  <h1>Section 4-1</h1>
-                  <h2>Defintition</h2>
-                  <h2>Input</h2>
-                  <h2>Output</h2>
+                  <h2>POST /exif/delete</h2>
+                  <h3>
+                  Definition</h2>
+                  <h3>
+                  Input</h2>
+                  <h3>
+                  Output</h2>
                   <p>Try to scroll this section and look at the navigation list while scrolling!</p>
                </div>
             </div>
          </div>
+         <footer class="footer">
+            <div class="container text-center">
+               <!-- <a href="#"><i class="fa fa-linkedin"></i></a> !-->
+               <p>
+                  API developped by Gaetan GOUZI
+                  <a href="https://github.com/ggouzi" target="_blank"><i class="fa fa-2x fa-github"></i></a>
+               </p>
+               <p>Your feedback is important. Feel free to tell me what kind of improvment you would like, the bugs you have found or just your opinion about this API
+                  <a href="mailto:gouzi.gaetan@gmail.com">gouzi.gaetan@gmail.com</a>
+               </p>
+            </div>
+         </footer>
       </div>
    </body>
 </html>
