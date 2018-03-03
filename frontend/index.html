@@ -19,7 +19,7 @@
       <script src="js/json/output500.js"></script>
       <script>
          $(document).ready(function() {
-
+         
            // /read/simple
            $("#simpleOutput200").text(JSON.stringify(JSONsimpleOutput200, null, 2));
            Prism.highlightElement($('#simpleOutput200')[0]);
@@ -29,7 +29,7 @@
          
            $("#simpleOutput500").text(JSON.stringify(JSONoutput500, null, 2));
            Prism.highlightElement($('#simpleOutput500')[0]);
-
+         
            // /read/all
            $("#allOutput200").text(JSON.stringify(JSONallOutput200, null, 2));
            Prism.highlightElement($('#allOutput200')[0]);
@@ -49,12 +49,12 @@
          
            $("#rawOutput500").text(JSON.stringify(JSONoutput500, null, 2));
            Prism.highlightElement($('#rawOutput500')[0]);
-
-
+         
+         
          });
       </script>
    </head>
-   <body data-spy="scroll" data-target="#myScrollspy" data-offset="15">
+   <body data-spy="scroll" data-target="#scroll_spy" data-offset="0">
       <div class="container-fluid" style="background-color:#2196F3;color:#fff;height:160px;">
          <h1>EXIF Data API</h1>
       </div>
@@ -64,27 +64,28 @@
             <h1 align="center">API Reference</h1>
          </div>
          <div class="row">
-            <nav class="col-sm-3" id="myScrollspy">
+            <nav class="col-sm-3" id="scroll_spy">
                <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
-                  <li class="dropdown">
+                  <!-- <li class="dropdown">
                      <a class="dropdown-toggle" data-toggle="dropdown" href="#">POST /exif/read<span class="caret"></span></a>
                      <ul class="dropdown-menu">
                         <li><a href="#read_simple">POST /exif/read/simple</a></li>
                         <li><a href="#read_all">POST /exif/read/all</a></li>
                         <li><a href="#read_raw">POST /exif/read/raw</a></li>
                      </ul>
-                  </li>
+                  </li> -->
+                  <li><a href="#read_simple">POST /exif/read/simple</a></li>
+                  <li><a href="#read_all">POST /exif/read/all</a></li>
+                  <li><a href="#read_raw">POST /exif/read/raw</a></li>
                   <li><a href="#update">POST /exif/update</a></li>
                   <li><a href="#copy">POST /exif/copy</a></li>
                   <li><a href="#delete">POST /exif/delete</a></li>
                </ul>
             </nav>
             <div class="col-sm-9">
-
-                <h1>POST /exif/read</h1>
+               <h1>POST /exif/read</h1>
                <div id="read_simple" class="section">
-                  <h2>POST /exif/read/simple</h2>
-                  <div class="col-md-12">
+                  <h2 >POST /exif/read/simple</h2>
                      <h3>Definition</h3>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
@@ -104,22 +105,12 @@
                         </div>
                      </div>
                      <h3>Example</h3>
-                     </pre>
-                  </div>
-                  <div class="col-md-12">
-                     <div role="tabpanel" class="tab-pane fade in" id="example1">
-                        <pre><code class="language-bash">
- curl --trace-ascii /dev/stdout -X POST -H Accept:application/json \
- -F "file=@test.JPG" \
- http://localhost:3000/exif/read/simple
-</code>
-</pre>
+                     <div role="tabpanel" class="tab-pane fade in">
+                       <pre><code class="language-bash">curl -X POST -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/simple</code></pre>
                      </div>
-                  </div>
-               </div>
+                </div>
                <div id="read_all" class="section">
                   <h2>POST /exif/read/all</h2>
-                      <div class="col-md-12">
                      <h3>Definition</h3>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
@@ -139,22 +130,12 @@
                         </div>
                      </div>
                      <h3>Example</h3>
-                     </pre>
-                  </div>
-                  <div class="col-md-12">
-                     <div role="tabpanel" class="tab-pane fade in" id="example1">
-                        <pre><code class="language-bash">
- curl --trace-ascii /dev/stdout -X POST -H Accept:application/json \
- -F "file=@test.JPG" \
- http://localhost:3000/exif/read/all
-</code>
-</pre>
+                     <div role="tabpanel" class="tab-pane fade in">
+                        <pre><code class="language-bash">curl -X POST -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/all</code></pre>
                      </div>
-                  </div>
                </div>
                <div id="read_raw" class="section">
                   <h2>POST /exif/read/raw</h2>
-                                    <div class="col-md-12">
                      <h3>Definition</h3>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
@@ -170,28 +151,19 @@
                            <pre><code id="rawOutput422" class="language-json"></code></pre>
                         </div>
                         <div role="tabpanel" class="tab-pane fade in" id="raw_server_error">
-                           <pre><code id="rawOutput500" class="language-json"></code></pre>
+                        <pre><code id="rawOutput500" class="language-json"></code></pre>
                         </div>
                      </div>
                      <h3>Example</h3>
-                     </pre>
-                  </div>
-                  <div class="col-md-12">
-                     <div role="tabpanel" class="tab-pane fade in" id="example1">
-                        <pre><code class="language-bash">
- curl --trace-ascii /dev/stdout -X POST -H Accept:application/json \
- -F "file=@test.JPG" \
- http://localhost:3000/exif/read/raw
-</code>
-</pre>
-                     </div>
-                  </div>
+                     <div role="tabpanel" class="tab-pane fade in">
+                        <pre><code class="language-bash">curl -X POST -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/raw</code></pre>
+                    </div>
                </div>
                <div id="update" class="section">
-                  <h2>POST /exif/update</h2>
-                  <h3>Definition</h3>
-                  <h3>Output</h3>
-                  <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+                  <h2 >POST /exif/update</h2>
+                    <h3>Definition</h3>
+                    <h3>Output</h3>
+                    <p>Try to scroll this section and look at the navigation list while scrolling!</p>
                </div>
                <div id="copy" class="section">
                   <h2>POST /exif/copy</h2>
