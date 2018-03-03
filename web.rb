@@ -220,10 +220,10 @@ def getExifInfo(filename, all)
   # ModifyDate
   file[:file_name]=filename
   file[:file_size]=data.file_size.to_s
-  file[:file_access_date]=data.file_access_date.to_s
-  file[:file_modify_date]=data.file_modify_date.to_s
-  file[:image_height]=data.image_height
-  file[:image_width]=data.image_width
+  file[:file_access_date]=DateTime.strptime(data.file_access_date.to_s, "%Y-%m-%d %H:%M:%s") rescue nil
+  file[:file_modify_date]=DateTime.strptime(data.file_modify_date.to_s, "%Y-%m-%d %H:%M:%s") rescue nil
+  file[:image_height]=data.image_height.to_i
+  file[:image_width]=data.image_width.to_i
 
   # ---- Camera ----
   # Compression
@@ -236,8 +236,8 @@ def getExifInfo(filename, all)
   camera[:make]=data.make
   camera[:model]=data.model
   camera[:compression]=data.compression
-  camera[:date_time_original]=data.date_time_original.to_s
-  camera[:megapixels]=data.megapixels
+  camera[:date_time_original]=DateTime.strptime(data.date_time_original.to_s, "%Y-%m-%d %H:%M:%s") rescue nil
+  camera[:megapixels]=data.megapixels.to_f
   camera[:orientation]=data.orientation
   camera[:software]=data.software
 
@@ -259,19 +259,19 @@ def getExifInfo(filename, all)
   # ShutterSpeed
   # WhiteBalance
 
-  technical[:aperture]=data.aperture
-  technical[:brightness]=data.brightness
+  technical[:aperture]=data.aperture.to_f
+  technical[:brightness]=data.brightness.to_f
   technical[:contrast]=data.contrast
   technical[:exposure_time]=data.exposure_time
   technical[:filter_effect]=data.filter_effect
   technical[:flash]=data.flash
   technical[:flash_setting]=data.flash_setting
-  technical[:f_number]=data.f_number
+  technical[:f_number]=data.f_number.to_f
   technical[:focal_length]=data.focal_length
-  technical[:iso]=data.iso
+  technical[:iso]=data.iso.to_i
   technical[:light_source]=data.light_source
-  technical[:light_value]=data.light_value
-  technical[:max_aperture_value]=data.max_aperture_value
+  technical[:light_value]=data.light_value.to_f
+  technical[:max_aperture_value]=data.max_aperture_value.to_f
   technical[:saturation]=data.saturation
   technical[:shutter_speed]=data.shutter_speed
   technical[:white_balance]=data.white_balance
@@ -283,11 +283,13 @@ def getExifInfo(filename, all)
   # GPS Longitude                   
   # GPS Longitude Ref 
 
-  gps[:gps_date_time]=data.gps_date_time.to_s
-  gps[:gps_latitude]=data.gps_latitude
-  gps[:gps_latitude_ref]=data.gps_latitude_ref
-  gps[:gps_longitude]=data.gps_longitude
-  gps[:gps_longitude_ref]=data.gps_longitude_ref
+  gps[:gps_date_time]=DateTime.strptime(data.gps_date_time.to_s, "%Y-%m-%d %H:%M:%s") rescue nil
+  dms_latitude = data.gps_latitude.to_s.scan(/\d+\.?\d+/) rescue nil
+  gps[:gps_latitude]=(dms_latitude[0].to_f+(dms_latitude[1].to_f/60)+dms_latitude[2].to_f/3600).round(5)|| nil
+  gps[:gps_latitude_ref]=data.gps_latitude_ref.to_s[0] rescue nil
+  dms_longitude = data.gps_longitude.to_s.scan(/\d+\.?\d+/) rescue nil
+  gps[:gps_longitude]=(dms_longitude[0].to_f+(dms_longitude[1].to_f/60)+dms_longitude[2].to_f/3600).round(5)|| nil
+  gps[:gps_longitude_ref]=data.gps_longitude_ref.to_s[0] rescue nil
 
 
   if all
@@ -348,7 +350,7 @@ def getExifInfo(filename, all)
     technical[:sharpness]=data.sharpness
     technical[:shutter_speed_value]=data.shutter_speed_value
 
-    # GPS Satellites                  
+    # GPS Satellites            DateTime.strptime("12/22/2011", "%m/%d/%Y")      
     gps[:gps_satellites]=data.gps_satellites
 
 
