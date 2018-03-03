@@ -31,7 +31,6 @@ def duplicateFile(filename, filedir)
   return fileLocation
 end
 
-
 get '/' do
   'Welcome to ExifExtractor!'
 end
