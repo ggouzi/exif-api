@@ -43,16 +43,32 @@ post '/exif/read/simple' do
       filename = params[:file][:filename]
       begin
       	  duplicateFile(tempfile, SAVE_DIR)
-          exif = getExifInfo(filename)
+          exif = getExifInfo(filename, false)
           result = exif.to_json
-          puts result
       rescue Exception => e
           result = {:status => 500, :message => e.message, :error => true}.to_json
       end
     else
       result = {:status => 422, :message => "Missing file parameter", :error => true}.to_json
     end
+    result
+end
 
+post '/exif/read/all' do
+    result = nil
+    if params.include?('file')
+      tempfile = params[:file][:tempfile]
+      filename = params[:file][:filename]
+      begin
+          duplicateFile(tempfile, SAVE_DIR)
+          exif = getExifInfo(filename, true)
+          result = exif.to_json
+      rescue Exception => e
+          result = {:status => 500, :message => e.message, :error => true}.to_json
+      end
+    else
+      result = {:status => 422, :message => "Missing file parameter", :error => true}.to_json
+    end
     result
 end
 
@@ -71,7 +87,6 @@ post '/exif/read/raw' do
     else
       result = {:status => 422, :message => "Missing file parameter", :error => true }.to_json
     end
-
     result
 end
 
@@ -182,7 +197,7 @@ def removeExifTags(filename, tags)
   exifTags.save
 end
 
-def getExifInfo(filename)
+def getExifInfo(filename, all)
   data = MiniExiftool.new(filename)
   exif=Hash.new
   file=Hash.new
@@ -191,21 +206,24 @@ def getExifInfo(filename)
   technical=Hash.new
   picture=Hash.new
 
-# ---- File ----
-# FileName
-# FileSize
-# FileModifyDate
-# FileAccessDate
-# Image Height
-# Image Width
-# ModifyDate
-  file[:file_name]=filename.to_s
+
+  #puts data.to_hash.to_json
+
+
+  # ---- File ----
+  # FileName
+  # FileSize
+  # FileModifyDate
+  # FileAccessDate
+  # Image Height
+  # Image Width
+  # ModifyDate
+  file[:file_name]=filename
   file[:file_size]=data.file_size.to_s
   file[:file_access_date]=data.file_access_date.to_s
   file[:file_modify_date]=data.file_modify_date.to_s
-  file[:image_height]=data.image_height.to_s
-  file[:image_width]=data.image_width.to_s
-  exif[:file]=file
+  file[:image_height]=data.image_height
+  file[:image_width]=data.image_width
 
   # ---- Camera ----
   # Compression
@@ -215,64 +233,131 @@ def getExifInfo(filename)
   # Model
   # Orientation
   # Software
-  camera[:make]=data.make.to_s
-  camera[:model]=data.model.to_s
-  camera[:compression]=data.compression.to_s
+  camera[:make]=data.make
+  camera[:model]=data.model
+  camera[:compression]=data.compression
   camera[:date_time_original]=data.date_time_original.to_s
-  camera[:megapixels]=data.megapixels.to_s
-  camera[:orientation]=data.orientation.to_s
-  camera[:software]=data.software.to_s
-  exif[:camera]=camera
+  camera[:megapixels]=data.megapixels
+  camera[:orientation]=data.orientation
+  camera[:software]=data.software
 
-# ---- Techincal ----
-# Aperture
-# Brightness
-# Contrast
-# ExposureTime
-# FilterEffect
-# Flash
-# FlashSetting
-# FNumber
-# FocalLength
-# ISO
-# LightSource
-# LightValue
-# MaxApertureValue
-# Saturation
-# ShutterSpeed
-# WhiteBalance
+  # ---- Techincal ----
+  # Aperture
+  # Brightness
+  # Contrast
+  # ExposureTime
+  # FilterEffect
+  # Flash
+  # FlashSetting
+  # FNumber
+  # FocalLength
+  # ISO
+  # LightSource
+  # LightValue
+  # MaxApertureValue
+  # Saturation
+  # ShutterSpeed
+  # WhiteBalance
 
-  technical[:aperture]=data.aperture.to_s
-  technical[:brightness]=data.brightness.to_s
-  technical[:contrast]=data.contrast.to_s
-  technical[:exposure_time]=data.exposure_time.to_s
-  technical[:filter_effect]=data.filter_effect.to_s
-  technical[:flash]=data.flash.to_s
-  technical[:flash_setting]=data.flash_setting.to_s.to_s
-  technical[:f_number]=data.f_number.to_s
-  technical[:focal_length]=data.focal_length.to_s
-  technical[:iso]=data.iso.to_s
-  technical[:light_source]=data.light_source.to_s
-  technical[:light_value]=data.light_value.to_s
-  technical[:max_aperture_value]=data.max_aperture_value.to_s
-  technical[:saturation]=data.saturation.to_s
-  technical[:shutter_speed]=data.shutter_speed.to_s
-  technical[:white_balance]=data.white_balance.to_s
-  exif[:technical]=technical
+  technical[:aperture]=data.aperture
+  technical[:brightness]=data.brightness
+  technical[:contrast]=data.contrast
+  technical[:exposure_time]=data.exposure_time
+  technical[:filter_effect]=data.filter_effect
+  technical[:flash]=data.flash
+  technical[:flash_setting]=data.flash_setting
+  technical[:f_number]=data.f_number
+  technical[:focal_length]=data.focal_length
+  technical[:iso]=data.iso
+  technical[:light_source]=data.light_source
+  technical[:light_value]=data.light_value
+  technical[:max_aperture_value]=data.max_aperture_value
+  technical[:saturation]=data.saturation
+  technical[:shutter_speed]=data.shutter_speed
+  technical[:white_balance]=data.white_balance
 
-# ---- GPS ----
-# GPS Date/Time                                   
-# GPS Latitude                    
-# GPS Latitude Ref                
-# GPS Longitude                   
-# GPS Longitude Ref 
+  # ---- GPS ----
+  # GPS Date/Time                                   
+  # GPS Latitude                    
+  # GPS Latitude Ref                
+  # GPS Longitude                   
+  # GPS Longitude Ref 
 
   gps[:gps_date_time]=data.gps_date_time.to_s
-  gps[:gps_latitude]=data.gps_latitude.to_s
-  gps[:gps_latitude_ref]=data.gps_latitude_ref.to_s
-  gps[:gps_longitude]=data.gps_longitude.to_s
-  gps[:gps_longitude_ref]=data.gps_longitude_ref.to_s
-  exif[:gps]=gps
+  gps[:gps_latitude]=data.gps_latitude
+  gps[:gps_latitude_ref]=data.gps_latitude_ref
+  gps[:gps_longitude]=data.gps_longitude
+  gps[:gps_longitude_ref]=data.gps_longitude_ref
+
+
+  if all
+    # BitsPerSample
+    # FileType
+    # Image Size  
+    # MIMEType
+    # User Comment
+    file[:image_size]=data.image_size
+    file[:bits_per_sample]=data.bits_per_sample
+    file[:file_type]=data.file_type
+    file[:mime_type]=data.mime_type
+    file[:user_comment]=data.user_comment
+
+    # ResolutionUnit
+    # XResolution
+    # YResolution
+    camera[:resolution_unit]=data.resolution_unit
+    camera[:x_resolution]=data.x_resolution
+    camera[:y_resolution]=data.y_resolution
+
+    # DigitalZoom
+    # DigitalZoomRatio
+    # DistortionControl
+    # ExposureCompensation
+    # ExposureMode
+    # ExposureProgram
+    # FocalLengthIn35mmFormat
+    # FocusMode
+    # FOV
+    # GainControl
+    # HyperfocalDistance
+    # MaxApertureValue
+    # NoiseReduction
+    # ScaleFactor35efl
+    # SceneCaptureType
+    # SceneMode
+    # SceneType
+    # Sharpness
+    # ShutterSpeedValue
+    technical[:digital_zoom]=data.digital_zoom
+    technical[:digital_zoom_ratio]=data.digital_zoom_ratio
+    technical[:distortion_control]=data.distortion_control
+    technical[:exposure_compensation]=data.exposure_compensation
+    technical[:exposure_mode]=data.exposure_mode
+    technical[:exposure_program]=data.exposure_program
+    technical[:focal_length_in_35mm_format]=data.focal_length_in_35mm_format
+    technical[:focus_mode]=data.focus_mode
+    technical[:fov]=data.fov
+    technical[:gain_control]=data.gain_control
+    technical[:hyperfocal_distance]=data.hyperfocal_distance
+    technical[:max_aperture_value]=data.max_aperture_value
+    technical[:noise_reduction]=data.noise_reduction
+    technical[:scale_factor_35efl]=data.scale_factor_35efl
+    technical[:scene_capture_type]=data.scene_capture_type
+    technical[:scene_mode]=data.scene_mode
+    technical[:scene_type]=data.scene_type
+    technical[:sharpness]=data.sharpness
+    technical[:shutter_speed_value]=data.shutter_speed_value
+
+    # GPS Satellites                  
+    gps[:gps_satellites]=data.gps_satellites
+
+
+  end
+
+  exif[:file]=file.sort.to_h
+  exif[:camera]=camera.sort.to_h
+  exif[:technical]=technical.sort.to_h
+  exif[:gps]=gps.sort.to_h
 
   return convertNilValues(exif)
 end

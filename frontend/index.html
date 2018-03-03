@@ -13,11 +13,14 @@
       <script src="js/bootstrap-3.3.7.min.js"></script>
       <script src="js/prism.js"></script>
       <script src="js/json/simple/output200.js"></script>
+      <script src="js/json/raw/output200.js"></script>
+      <script src="js/json/all/output200.js"></script>
       <script src="js/json/output422.js"></script>
       <script src="js/json/output500.js"></script>
-      <script src="js/json/raw/output200.js"></script>
       <script>
          $(document).ready(function() {
+
+           // /read/simple
            $("#simpleOutput200").text(JSON.stringify(JSONsimpleOutput200, null, 2));
            Prism.highlightElement($('#simpleOutput200')[0]);
          
@@ -26,7 +29,18 @@
          
            $("#simpleOutput500").text(JSON.stringify(JSONoutput500, null, 2));
            Prism.highlightElement($('#simpleOutput500')[0]);
+
+           // /read/all
+           $("#allOutput200").text(JSON.stringify(JSONallOutput200, null, 2));
+           Prism.highlightElement($('#allOutput200')[0]);
          
+           $("#allOutput422").text(JSON.stringify(JSONoutput422, null, 2));
+           Prism.highlightElement($('#allOutput422')[0]);
+         
+           $("#allOutput500").text(JSON.stringify(JSONoutput500, null, 2));
+           Prism.highlightElement($('#allOutput500')[0]);
+         
+           // /read/raw
            $("#rawOutput200").text(JSON.stringify(JSONrawOutput200, null, 2));
            Prism.highlightElement($('#rawOutput200')[0]);
          
@@ -35,6 +49,8 @@
          
            $("#rawOutput500").text(JSON.stringify(JSONoutput500, null, 2));
            Prism.highlightElement($('#rawOutput500')[0]);
+
+
          });
       </script>
    </head>
@@ -53,20 +69,20 @@
                   <li class="dropdown">
                      <a class="dropdown-toggle" data-toggle="dropdown" href="#">POST /exif/read<span class="caret"></span></a>
                      <ul class="dropdown-menu">
-                        <li><a href="#section11">POST /exif/read/simple</a></li>
-                        <li><a href="#section12">POST /exif/read/all</a></li>
-                        <li><a href="#section13">POST /exif/read/raw</a></li>
+                        <li><a href="#read_simple">POST /exif/read/simple</a></li>
+                        <li><a href="#read_all">POST /exif/read/all</a></li>
+                        <li><a href="#read_raw">POST /exif/read/raw</a></li>
                      </ul>
                   </li>
-                  <li><a href="#section2">POST /exif/update</a></li>
-                  <li><a href="#section3">POST /exif/copy</a></li>
-                  <li><a href="#section4">POST /exif/delete</a></li>
+                  <li><a href="#update">POST /exif/update</a></li>
+                  <li><a href="#copy">POST /exif/copy</a></li>
+                  <li><a href="#delete">POST /exif/delete</a></li>
                </ul>
             </nav>
             <div class="col-sm-9">
 
                 <h1>POST /exif/read</h1>
-               <div id="section11" class="section">
+               <div id="read_simple" class="section">
                   <h2>POST /exif/read/simple</h2>
                   <div class="col-md-12">
                      <h3>Definition</h3>
@@ -74,7 +90,7 @@
                      <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item active"><a href="#simple_output" aria-controls="simple_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
                         <li class="nav-item"><a href="#simple_unprocessable_entity" aria-controls="simple_unprocessable_entity" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 422 Unprocessable Entity </a></li>
-                        <li class="nav-item"><a href="#simple_server_error" aria-controls="server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
+                        <li class="nav-item"><a href="#simple_server_error" aria-controls="simple_server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
                      </ul>
                      <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="simple_output">
@@ -101,13 +117,42 @@
                      </div>
                   </div>
                </div>
-               <div id="section12" class="section">
+               <div id="read_all" class="section">
                   <h2>POST /exif/read/all</h2>
-                  <h3>Definition</h3>
-                  <h3>Output</h3>
-                  <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+                      <div class="col-md-12">
+                     <h3>Definition</h3>
+                     <h3>Output</h3>
+                     <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item active"><a href="#all_output" aria-controls="all_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
+                        <li class="nav-item"><a href="#all_unprocessable_entity" aria-controls="all_unprocessable_entity" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 422 Unprocessable Entity </a></li>
+                        <li class="nav-item"><a href="#all_server_error" aria-controls="all_server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
+                     </ul>
+                     <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="all_output">
+                           <pre><code id="allOutput200" class="language-json"></code></pre>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="all_unprocessable_entity">
+                           <pre><code id="allOutput422" class="language-json"></code></pre>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="all_server_error">
+                           <pre><code id="allOutput500" class="language-json"></code></pre>
+                        </div>
+                     </div>
+                     <h3>Example</h3>
+                     </pre>
+                  </div>
+                  <div class="col-md-12">
+                     <div role="tabpanel" class="tab-pane fade in" id="example1">
+                        <pre><code class="language-bash">
+ curl --trace-ascii /dev/stdout -X POST -H Accept:application/json \
+ -F "file=@test.JPG" \
+ http://localhost:3000/exif/read/all
+</code>
+</pre>
+                     </div>
+                  </div>
                </div>
-               <div id="section13" class="section">
+               <div id="read_raw" class="section">
                   <h2>POST /exif/read/raw</h2>
                                     <div class="col-md-12">
                      <h3>Definition</h3>
@@ -142,19 +187,19 @@
                      </div>
                   </div>
                </div>
-               <div id="section2" class="section">
+               <div id="update" class="section">
                   <h2>POST /exif/update</h2>
                   <h3>Definition</h3>
                   <h3>Output</h3>
                   <p>Try to scroll this section and look at the navigation list while scrolling!</p>
                </div>
-               <div id="section3" class="section">
+               <div id="copy" class="section">
                   <h2>POST /exif/copy</h2>
                   <h3>Definition</h3>
                   <h3>Output</h3>
                   <p>Try to scroll this section and look at the navigation list while scrolling!</p>
                </div>
-               <div id="section4" class="section">
+               <div id="delete" class="section">
                   <h2>POST /exif/delete</h2>
                   <h3>Definition</h3>
                   <h3>Output</h3>

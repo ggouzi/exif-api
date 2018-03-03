@@ -1,3 +1,9 @@
 tmp/
 exif.txt
 request.txt
+Mockup.png
+routes.txt
+exif.simple.txt
+.*jpg
+.*JPG
+.*jpeg
