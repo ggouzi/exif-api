@@ -23,12 +23,13 @@ end
 def duplicateFile(filename, filedir)
   hash = hashFile(filename)
   FileUtils.mkdir_p(filedir) unless File.exists?(filedir)
-  fileLocation = File.join(filedir, hash+".jpg")
+  newFileName = hash+".jpg"
+  fileLocation = File.join(filedir, newFileName)
   # Check number of files in the folder
   File.open(fileLocation, 'wb') do |file|
       file.write(filename.read)
   end
-  return fileLocation
+  return newFileName
 end
 
 get '/' do
@@ -41,8 +42,9 @@ post '/exif/read/simple' do
       tempfile = params[:file][:tempfile]
       filename = params[:file][:filename]
       begin
-      	  duplicateFile(tempfile, SAVE_DIR)
+      	  hash = duplicateFile(tempfile, SAVE_DIR)
           exif = getExifInfo(filename, false)
+          deleteFile(hash, SAVE_DIR)
           result = exif.to_json
       rescue Exception => e
           result = {:status => 500, :message => e.message, :error => true}.to_json
@@ -59,8 +61,9 @@ post '/exif/read/all' do
       tempfile = params[:file][:tempfile]
       filename = params[:file][:filename]
       begin
-          duplicateFile(tempfile, SAVE_DIR)
+          hash = duplicateFile(tempfile, SAVE_DIR)
           exif = getExifInfo(filename, true)
+          deleteFile(hash, SAVE_DIR)
           result = exif.to_json
       rescue Exception => e
           result = {:status => 500, :message => e.message, :error => true}.to_json
@@ -77,8 +80,9 @@ post '/exif/read/raw' do
       tempfile = params[:file][:tempfile]
       filename = params[:file][:filename]
       begin
-          duplicateFile(tempfile, SAVE_DIR)
+          hash = duplicateFile(tempfile, SAVE_DIR)
           exif = getRawExifInfo(filename)
+          deleteFile(hash, SAVE_DIR)
           result = exif.to_json
       rescue Exception => e
           result = {:status => 500, :message => e.message, :error => true}.to_json
@@ -102,6 +106,8 @@ post '/exif/copy' do
           hashSource = duplicateFile(tempfileSource, SAVE_DIR)
           hashDest = duplicateFile(tempfileDest, SAVE_DIR)
           copyTags(hashSource, hashDest)
+          deleteFile(hashSource, SAVE_DIR)
+          deleteFile(hashDest, SAVE_DIR)
           send_file hashDest, :filename => filenameDest, type: 'image/jpeg'
       rescue Exception => e
           result = {:status => 500, :message => e.message, :error => true}.to_json
@@ -148,6 +154,9 @@ def convertNilValues(hash)
   return hash
 end
 
+def deleteFile(hash, dir)
+  FileUtils.rm(File.join(dir, hash))
+end
 
 def hashToSnakeCase(hash)
   newHash=Hash.new
