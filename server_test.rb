@@ -14,7 +14,6 @@ class MainAppTest < Minitest::Test
   def test_displays_welcome_page
     get '/'
     assert last_response.status==200
-    assert last_response.body.include?('Welcome to ExifExtractor!')
   end
 
 end
