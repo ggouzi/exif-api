@@ -14,16 +14,15 @@ get '/exif' do
   File.read(File.join('frontend', 'index.html'))
 end
 
-post '/exif/read/simple' do
+
+post '/exif/upload' do
   result=Utils.parseRequest(params)
   if result.nil?
     tempfile = params[:file][:tempfile]
     filename = params[:file][:filename]
     begin
-    	  hash = Utils.duplicateFile(tempfile, SAVE_DIR)
-        exif = getExifInfo(filename, false)
-        Utils.deleteFile(hash, SAVE_DIR)
-        result = exif.to_json
+        hash = Utils.duplicateFile(tempfile, SAVE_DIR)
+        result = { :file_hash => hash }.to_json
     rescue Exception => e
         result = {:status => 500, :message => e.message, :error => true}.to_json
     end
@@ -31,32 +30,65 @@ post '/exif/read/simple' do
   result
 end
 
-post '/exif/read/all' do
-  result=Utils.parseRequest(params)
-  if result.nil?
-    tempfile = params[:file][:tempfile]
-    filename = params[:file][:filename]
-    begin
-        hash = Utils.duplicateFile(tempfile, SAVE_DIR)
-        exif = getExifInfo(filename, true)
-        Utils.deleteFile(hash, SAVE_DIR)
-        result = exif.to_json
-    rescue Exception => e
-        result = {:status => 500, :message => e.message, :error => true}.to_json
+
+
+get '/exif/read/simple/:hash' do
+    filename = File.join(SAVE_DIR, params[:hash]+".jpg")
+    if !File.file?(filename)
+        result = {:status => 404, :message => "File not found", :error => true}.to_json
+    else
+      begin
+          exif = getExifInfo(filename, false)
+          result = exif.to_json
+      rescue Exception => e
+          result = {:status => 500, :message => e.message, :error => true}.to_json
+      end
     end
-  end
-  result
+    result
 end
 
-post '/exif/read/raw' do
-  result=Utils.parseRequest(params)
+get '/exif/read/all/:hash' do
+    filename = File.join(SAVE_DIR, params[:hash]+".jpg")
+    if !File.file?(filename)
+        result = {:status => 404, :message => "File not found", :error => true}.to_json
+    else
+      begin
+          exif = getExifInfo(filename, true)
+          result = exif.to_json
+      rescue Exception => e
+          result = {:status => 500, :message => e.message, :error => true}.to_json
+      end
+    end
+    result
+end
+
+get '/exif/read/raw/:hash' do
+    filename = File.join(SAVE_DIR, params[:hash]+".jpg")
+    if !File.file?(filename)
+        result = {:status => 404, :message => "File not found", :error => true}.to_json
+    else
+      begin
+        exif = getRawExifInfo(filename)
+        result = exif.to_json
+      rescue Exception => e
+          result = {:status => 500, :message => e.message, :error => true}.to_json
+      end
+    end
+    result
+end
+
+
+post '/exif/update' do
+  result=Utils.parseRequestUpdate(params)
   if result.nil?
     tempfile = params[:file][:tempfile]
     filename = params[:file][:filename]
     begin
+        tagToDelete = Utils.to_snake_case(params[:tag])
         hash = Utils.duplicateFile(tempfile, SAVE_DIR)
+        filePath = File.join(SAVE_DIR, hash)
         exif = getRawExifInfo(filename)
-        Utils.deleteFile(hash, SAVE_DIR)
+        Utils.updateTag(filePath, tagToDelete)
         result = exif.to_json
     rescue Exception => e
         result = {:status => 500, :message => e.message, :error => true}.to_json
@@ -66,7 +98,7 @@ post '/exif/read/raw' do
 end
 
 post '/exif/copy' do
-  result=Utils.parseRequestBothFiles(params)
+  result=Utils.parseRequestCopy(params)
     if result.nil?
       tempfileSource = params[:file_source][:tempfile]
       filenameSource = params[:file_source][:filename]
@@ -75,10 +107,12 @@ post '/exif/copy' do
       begin
           hashSource = Utils.duplicateFile(tempfileSource, SAVE_DIR)
           hashDest = Utils.duplicateFile(tempfileDest, SAVE_DIR)
-          copyTags(hashSource, hashDest)
-          Utils.deleteFile(hashSource, SAVE_DIR)
-          Utils.deleteFile(hashDest, SAVE_DIR)
-          send_file hashDest, :filename => filenameDest, type: 'image/jpeg'
+          sourceFileLocation = File.join(SAVE_DIR, hashSource)
+          sourceDestLocation = File.join(SAVE_DIR, hashDest)
+          copyTags(sourceFileLocation, sourceDestLocation)
+          send_file sourceDestLocation, :filename => filenameDest, type: 'image/jpeg'
+          #Utils.deleteFile(hashSource, SAVE_DIR)
+          #Utils.deleteFile(hashDest, SAVE_DIR)
       rescue Exception => e
           result = {:status => 500, :message => e.message, :error => true}.to_json
       end
@@ -87,24 +121,20 @@ post '/exif/copy' do
 end
 
 post '/exif/delete' do
-    result = nil
-    if params.include?('file') && params.include?('tags')
+    result = Utils.parseRequestDelete(params)
+    if result.nil?
       tempFile = params[:file][:tempfile]
       fileName = params[:file][:filename]
-
-      tagsToDelete = params[:tags].split(',')
-
       begin
+        tagsToDelete = Utils.to_snake_case(params[:tags]).split(',')
         hash = Utils.duplicateFile(tempFile, SAVE_DIR)
-        removeExifTags(hash, tagsToDelete)
-        send_file hash, :filename => fileName, type: 'image/jpeg'
+        filePath = File.join(SAVE_DIR, hash)
+        removeExifTags(filePath, tagsToDelete)
+        send_file filePath, :filename => fileName, type: 'image/jpeg'
       rescue Exception => e
           result = {:status => 500, :message => e.message, :error => true}.to_json
       end
-    else
-      result = {:status => 422, :message => "Missing parameter", :error => true}.to_json
     end
-
     result
 end
 
@@ -121,7 +151,7 @@ def parseExif(data)
   return exif
 end
 
-def removeTags(data)
+def removeTags(data, tags)
   tags = Utils.hashToSnakeCase(tags)
   hash = Utils.hashToSnakeCase(data.to_hash)
   hash = hash.delete_if { |k,v| EXCLUDE_LIST.include? k or tags.include? k }
@@ -131,22 +161,19 @@ end
 def copyTags(filenameSource, filenameDest)
   tagsSourceFile = MiniExiftool.new(filenameSource)
   tagsDestFile = MiniExiftool.new(filenameDest)
-  tagsDestFile.initialize_from_hash(Hash.new)
+  tagsDestFile.remove_all_tags filenameDest
+  puts tagsDestFile.to_hash.sort.to_h
+  puts "COPY"
   tagsDestFile.copy_tags_from(filenameSource, tagsSourceFile.all_tags)
   tagsDestFile.save
   puts tagsDestFile.to_hash
 end
 
 def removeExifTags(filename, tags)
+  puts tags
   exifTags = MiniExiftool.new(filename)
   tempHash = removeTags(exifTags, tags)
-  newTags = MiniExiftool.new nil
-  newTags.initialize_from_hash(tempHash)
-  newTags.tags.each do |tag|
-    #exifTags[tag]=newTags[tag]
-    puts "#{tag}: #{newTags[tag]}"
-  end
-  #puts exifTags.to_hash
+  exifTags.initialize_from_hash(tempHash)
   exifTags.save
 end
 
@@ -171,7 +198,7 @@ def getExifInfo(filename, all)
   # Image Height
   # Image Width
   # ModifyDate
-  file[:file_name]=filename
+  #file[:file_name]=filename
   file[:file_size]=data.file_size.to_s
   file[:file_access_date]=DateTime.strptime(data.file_access_date.to_s, "%Y-%m-%d %H:%M:%s") rescue nil
   file[:file_modify_date]=DateTime.strptime(data.file_modify_date.to_s, "%Y-%m-%d %H:%M:%s") rescue nil
@@ -315,4 +342,22 @@ def getExifInfo(filename, all)
   exif[:gps]=gps.sort.to_h
 
   return Utils.convertNilValues(exif)
+end
+
+
+class MiniExiftool
+      def initialize_from_hash hash
+          @values = TagHash.new # Need to clean the previous tags
+          set_values hash
+          set_opts_by_heuristic
+          self
+      end
+
+      # def remove_all_tags filePath
+      #   MiniExiftool.command="exiftool -P -overwrite_original -all= #{filePath}"
+      # end
+
+      # def remove_tags filePath, tags
+      #   MiniExiftool.command="exiftool -overwrite_original -all= #{filePath}"
+      # end
 end
