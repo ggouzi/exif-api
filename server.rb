@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'mini_exiftool'
+require 'objspace'
 require_relative 'utils'
 
 set :port, 3000
@@ -7,77 +8,70 @@ set :port, 3000
 EXCLUDE_LIST = [ 'thumbnail_image', 'data_dump' ]
 NIL_VALUES = [ "", " ", "Unknown", "Unknown ()", "n/a", "null" ]
 SAVE_DIR = "tmp"
+LIMIT_FILE_SIZE=65*1024 # 65 MB MAX
 
 get '/exif' do
   File.read(File.join('frontend', 'index.html'))
 end
 
 post '/exif/read/simple' do
-    result = nil
-    if params.include?('file')
-      tempfile = params[:file][:tempfile]
-      filename = params[:file][:filename]
-      begin
-      	  hash = Utils.duplicateFile(tempfile, SAVE_DIR)
-          exif = getExifInfo(filename, false)
-          Utils.deleteFile(hash, SAVE_DIR)
-          result = exif.to_json
-      rescue Exception => e
-          result = {:status => 500, :message => e.message, :error => true}.to_json
-      end
-    else
-      result = {:status => 422, :message => "Missing file parameter", :error => true}.to_json
+  result=Utils.parseRequest(params)
+  if result.nil?
+    tempfile = params[:file][:tempfile]
+    filename = params[:file][:filename]
+    begin
+    	  hash = Utils.duplicateFile(tempfile, SAVE_DIR)
+        exif = getExifInfo(filename, false)
+        Utils.deleteFile(hash, SAVE_DIR)
+        result = exif.to_json
+    rescue Exception => e
+        result = {:status => 500, :message => e.message, :error => true}.to_json
     end
-    result
+  end 
+  result
 end
 
 post '/exif/read/all' do
-    result = nil
-    if params.include?('file')
-      tempfile = params[:file][:tempfile]
-      filename = params[:file][:filename]
-      begin
-          hash = Utils.duplicateFile(tempfile, SAVE_DIR)
-          exif = getExifInfo(filename, true)
-          Utils.deleteFile(hash, SAVE_DIR)
-          result = exif.to_json
-      rescue Exception => e
-          result = {:status => 500, :message => e.message, :error => true}.to_json
-      end
-    else
-      result = {:status => 422, :message => "Missing file parameter", :error => true}.to_json
+  result=Utils.parseRequest(params)
+  if result.nil?
+    tempfile = params[:file][:tempfile]
+    filename = params[:file][:filename]
+    begin
+        hash = Utils.duplicateFile(tempfile, SAVE_DIR)
+        exif = getExifInfo(filename, true)
+        Utils.deleteFile(hash, SAVE_DIR)
+        result = exif.to_json
+    rescue Exception => e
+        result = {:status => 500, :message => e.message, :error => true}.to_json
     end
-    result
+  end
+  result
 end
 
 post '/exif/read/raw' do
-    result = nil
-    if params.include?('file')
-      tempfile = params[:file][:tempfile]
-      filename = params[:file][:filename]
-      begin
-          hash = Utils.duplicateFile(tempfile, SAVE_DIR)
-          exif = getRawExifInfo(filename)
-          Utils.deleteFile(hash, SAVE_DIR)
-          result = exif.to_json
-      rescue Exception => e
-          result = {:status => 500, :message => e.message, :error => true}.to_json
-      end
-    else
-      result = {:status => 422, :message => "Missing file parameter", :error => true }.to_json
+  result=Utils.parseRequest(params)
+  if result.nil?
+    tempfile = params[:file][:tempfile]
+    filename = params[:file][:filename]
+    begin
+        hash = Utils.duplicateFile(tempfile, SAVE_DIR)
+        exif = getRawExifInfo(filename)
+        Utils.deleteFile(hash, SAVE_DIR)
+        result = exif.to_json
+    rescue Exception => e
+        result = {:status => 500, :message => e.message, :error => true}.to_json
     end
-    result
+  end
+  result
 end
 
 post '/exif/copy' do
-    result = nil
-    if params.include?('file_source') && params.include?('file_dest')
+  result=Utils.parseRequestBothFiles(params)
+    if result.nil?
       tempfileSource = params[:file_source][:tempfile]
       filenameSource = params[:file_source][:filename]
-
       tempfileDest = params[:file_dest][:tempfile]
       filenameDest = params[:file_dest][:filename]
-
       begin
           hashSource = Utils.duplicateFile(tempfileSource, SAVE_DIR)
           hashDest = Utils.duplicateFile(tempfileDest, SAVE_DIR)
@@ -88,10 +82,7 @@ post '/exif/copy' do
       rescue Exception => e
           result = {:status => 500, :message => e.message, :error => true}.to_json
       end
-    else
-      result = {:status => 422, :message => "Missing file parameter", :error => true}.to_json
     end
-
     result
 end
 
