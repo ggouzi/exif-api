@@ -17,6 +17,10 @@ def self.deleteFile(hash, dir)
 	FileUtils.rm(File.join(dir, hash))
 end
 
+def self.deleteFile(path)
+  FileUtils.rm(path)
+end
+
 def self.duplicateFile(filename, filedir)
   hash = hashFile(filename)
   FileUtils.mkdir_p(filedir) unless File.exists?(filedir)
