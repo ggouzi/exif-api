@@ -11,8 +11,8 @@ class MainAppTest < Minitest::Test
     Sinatra::Application
   end
  
-  def test_displays_welcome_page
-    get '/'
+  def test_upload
+    get '/exif/upload'
     assert last_response.status==200
   end
 

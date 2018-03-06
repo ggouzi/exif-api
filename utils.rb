@@ -12,6 +12,10 @@ def self.to_snake_case(camel_cased_word)
    tr("- ", "_ ").downcase
 end
 
+def self.getFilename(filepath)
+  File.basename filepath 
+end
+
 # ***** File *****
 def self.deleteFile(hash, dir)
 	FileUtils.rm(File.join(dir, hash))
@@ -57,9 +61,27 @@ def self.hashToSnakeCase(hash)
   return newHash
 end
 
+def self.parseParams(hash)
+  result = nil
+  filename = nil
+  if !hash.nil?
+    begin
+      filename =`ls -a #{SAVE_DIR} | grep "^#{hash}\..*" | head -1`
+      filepath = File.join(SAVE_DIR, filename)
+      #extension = filename.split('.').last
+      if !File.file?(filepath)
+        result = {:status => 404, :message => "File not found", :error => true}.to_json
+      end
+      return filepath.strip, nil
+    rescue
+      result = {:status => 500, :message => "Internal server error", :error => true}.to_json
+    end
+  end
+  return nil, result
+end
 
 
-def self.parseRequest(params)
+def self.parseFileParam(params)
   result = nil
   if params.include?('file')
     if params[:file].include?('tempfile') && params[:file].include?('filename')  
@@ -69,9 +91,8 @@ def self.parseRequest(params)
           result = {:status => 413, :message => "File size too large", :error => true}.to_json
         end
       rescue
-        result = {:status => 400, :message => "Cannot access file parameter as a File", :error => true}.to_json
+        result = {:status => 500, :message => "Internal server error", :error => true}.to_json
       end
-
     else
       result = {:status => 400, :message => "File parameter is malformed", :error => true}.to_json
     end
@@ -80,86 +101,5 @@ def self.parseRequest(params)
   end
   return result
 end
-
-def self.parseRequestCopy(params)
-  result = nil
-  if params.include?('file_source') && params.include?('file_dest')
-    if params[:file_source].include?('tempfile') && params[:file_source].include?('filename') && params[:file_dest].include?('tempfile') && params[:file_dest].include?('filename')  
-      begin
-        fileSourceSize = File.size(params[:file_source][:tempfile]).to_f / 1024
-        fileDestSize = File.size(params[:file_dest][:tempfile]).to_f / 1024
-        if ObjectSpace.memsize_of(params[:file_source][:tempfile])>=LIMIT_FILE_SIZE || ObjectSpace.memsize_of(params[:file_dest][:tempfile])>=LIMIT_FILE_SIZE
-          result = {:status => 413, :message => "File size too large", :error => true}.to_json
-        end
-      rescue
-        result = {:status => 400, :message => "Cannot access file parameter as a File", :error => true}.to_json
-      end
-
-    else
-      result = {:status => 400, :message => "File parameter is malformed", :error => true}.to_json
-    end
-  else
-    result = {:status => 400, :message => "Missing file parameter", :error => true}.to_json
-  end
-  return result
-end
-
-def self.parseRequestDelete(params)
-  result = nil
-  if params.include?('file')
-    if params[:file].include?('tempfile') && params[:file].include?('filename')  
-      begin
-        fileSize = File.size(params[:file][:tempfile]).to_f / 1024
-        if ObjectSpace.memsize_of(params[:file][:tempfile])>=LIMIT_FILE_SIZE
-          result = {:status => 413, :message => "File size too large", :error => true}.to_json
-        end
-      rescue
-        result = {:status => 400, :message => "Cannot access file parameter as a File", :error => true}.to_json
-      end
-    else
-      result = {:status => 400, :message => "File parameter is malformed", :error => true}.to_json
-    end
-  else
-    result = {:status => 400, :message => "Missing file parameter", :error => true}.to_json
-  end
-  if params.include?('tags')
-    if !params[:tags].is_a? String
-      result = {:status => 400, :message => "Cannot parse tags parameter", :error => true}.to_json
-    end
-  else
-    result = {:status => 400, :message => "Missing tags parameter", :error => true}.to_json
-  end
-  return result
-end
-
-
-def self.parseRequestUpdate(params)
-  result = nil
-  if params.include?('file')
-    if params[:file].include?('tempfile') && params[:file].include?('filename')  
-      begin
-        fileSize = File.size(params[:file][:tempfile]).to_f / 1024
-        if ObjectSpace.memsize_of(params[:file][:tempfile])>=LIMIT_FILE_SIZE
-          result = {:status => 413, :message => "File size too large", :error => true}.to_json
-        end
-      rescue
-        result = {:status => 400, :message => "Cannot access file parameter as a File", :error => true}.to_json
-      end
-    else
-      result = {:status => 400, :message => "File parameter is malformed", :error => true}.to_json
-    end
-  else
-    result = {:status => 400, :message => "Missing file parameter", :error => true}.to_json
-  end
-  if params.include?('tag')
-    if !params[:tag].is_a? String
-      result = {:status => 400, :message => "Cannot parse tag parameter", :error => true}.to_json
-    end
-  else
-    result = {:status => 400, :message => "Missing tag parameter", :error => true}.to_json
-  end
-  return result
-end
-
 
 end
