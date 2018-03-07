@@ -25,14 +25,13 @@ def self.deleteFile(path)
   FileUtils.rm(path)
 end
 
-def self.duplicateFile(filename, filedir)
-  hash = hashFile(filename)
+def self.duplicateFile(file, filename, filedir)
   FileUtils.mkdir_p(filedir) unless File.exists?(filedir)
-  newFileName = hash+".jpg"
+  hash = hashFile(file.path)
+  extension = File.extname(File.basename(file.path))
+  newFileName = hash+extension
   fileLocation = File.join(filedir, newFileName)
-  File.open(fileLocation, 'wb') do |file|
-      file.write(filename.read)
-  end
+  FileUtils.cp(file.path, "./#{ENV['SAVE_DIR']}/#{newFileName}")
   return hash
 end
 
@@ -66,9 +65,8 @@ def self.parseParams(hash)
   filename = nil
   if !hash.nil?
     begin
-      filename =`ls -a #{SAVE_DIR} | grep "^#{hash}\..*" | head -1`
-      filepath = File.join(SAVE_DIR, filename)
-      #extension = filename.split('.').last
+      filename =`ls -a #{ENV["SAVE_DIR"]} | grep "^#{hash}\..*" | head -1`
+      filepath = File.join(ENV["SAVE_DIR"], filename)
       if !File.file?(filepath)
         result = {:status => 404, :message => "File not found", :error => true}.to_json
       end

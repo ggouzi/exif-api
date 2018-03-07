@@ -7,10 +7,10 @@ set :port, 3000
 
 EXCLUDE_LIST = [ 'thumbnail_image', 'data_dump' ]
 NIL_VALUES = [ "", " ", "Unknown", "Unknown ()", "n/a", "null" ]
-SAVE_DIR = "tmp"
+ENV["SAVE_DIR"] = "tmp"
 LIMIT_FILE_SIZE=65*1024 # 65 MB MAX
 
-before '/exif/*' do
+before '/exif/read/*' do
   content_type :json
 end
 
@@ -44,7 +44,7 @@ post '/exif/upload/?' do
     tempfile = params[:file][:tempfile]
     filename = params[:file][:filename]
     begin
-        hash = Utils.duplicateFile(tempfile, SAVE_DIR)
+        hash = Utils.duplicateFile(tempfile, filename, ENV["SAVE_DIR"])
         result = { :file_hash => hash }.to_json
     rescue Exception => e
         result = {:status => 500, :message => "Internal server error: Unable to upload file", :error => true}.to_json
@@ -60,7 +60,7 @@ get '/exif/read/simple/:hash/?' do
         exif = getExifInfo(filepath, false)
         result = exif.to_json
       rescue Exception => e
-        result = {:status => 500, :message => "Internal server error: Unable to retrieve exif data", :error => true}.to_json
+        result = {:status => 500, :message => "Internal server error: Unable to retrieve exif data"+e.message, :error => true}.to_json
       end
     end
     result
@@ -155,7 +155,7 @@ def copyTags(filepathSource, filepathDest)
     return nil, {:status => 404, :message => "File not found", :error => true}.to_json
   end
   extension = filepathDest.split('.').last
-  newFileName = File.join(SAVE_DIR, Utils.hashFile(filepathDest)+"."+extension)
+  newFileName = File.join(ENV["SAVE_DIR"], Utils.hashFile(filepathDest)+"."+extension)
   command_line = `exiftool -o #{newFileName} -tagsFromFile #{filepathSource} -all:all #{filepathDest}`
   if !File.file?(newFileName)
     return nil, {:status => 404, :message => "File not found", :error => true}.to_json
@@ -336,7 +336,7 @@ def delete_all_tags(filePath)
     return nil, {:status => 404, :message => "File not found", :error => true}.to_json
   end
   extension = filePath.split('.').last
-  newFilePath = File.join(SAVE_DIR, Utils.hashFile(filePath)+"."+extension)
+  newFilePath = File.join(ENV["SAVE_DIR"], Utils.hashFile(filePath)+"."+extension)
   command_line = `exiftool -o #{newFilePath} -all= #{filePath}`
   if !File.file?(newFilePath)
     return nil, {:status => 404, :message => "File not found", :error => true}.to_json
