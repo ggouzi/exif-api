@@ -60,19 +60,28 @@ def self.hashToSnakeCase(hash)
   return newHash
 end
 
+def self.createJsonBody(status, message, error)
+  return {:status => status, :error => true, :message => message}
+end
+
+def self.getStatusCode(result)
+  return result.key?(:status)? result[:status].to_i : 200
+end
+
 def self.parseParams(hash)
   result = nil
   filename = nil
   if !hash.nil?
     begin
       filename =`ls -a #{ENV["SAVE_DIR"]} | grep "^#{hash}\..*" | head -1`
-      filepath = File.join(ENV["SAVE_DIR"], filename)
+      filepath = File.join(ENV["SAVE_DIR"], filename.strip)
       if !File.file?(filepath)
-        result = {:status => 404, :message => "File not found", :error => true}.to_json
+        result = createJsonBody(404, "File not found", true)
+      else
+        return filepath, nil
       end
-      return filepath.strip, nil
     rescue
-      result = {:status => 500, :message => "Internal server error", :error => true}.to_json
+      result = createJsonBody(500, "Internal server error", true)
     end
   end
   return nil, result
@@ -86,16 +95,16 @@ def self.parseFileParam(params)
       begin
         fileSize = File.size(params[:file][:tempfile]).to_f / 1024
         if ObjectSpace.memsize_of(params[:file][:tempfile])>=LIMIT_FILE_SIZE
-          result = {:status => 413, :message => "File size too large", :error => true}.to_json
+          result = {:status => 413, :message => "File size too large", :error => true}
         end
       rescue
-        result = {:status => 500, :message => "Internal server error", :error => true}.to_json
+        result = createJsonBody(500, "Internal server error", true)
       end
     else
-      result = {:status => 400, :message => "File parameter is malformed", :error => true}.to_json
+      result = createJsonBody(422, "Unprocessable Entity: File parameter is malformed", true)
     end
   else
-    result = {:status => 400, :message => "Missing file parameter", :error => true}.to_json
+    result = createJsonBody(400, "Missing file parameter", true)
   end
   return result
 end

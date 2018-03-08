@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
-      <title>Bootstrap Example</title>
+      <title>EXIF API</title>
       <meta charset="utf-8">
       <link rel="stylesheet" href="css/bootstrap-3.3.7.min.css">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -67,25 +67,31 @@
             <nav class="col-sm-3" id="scroll_spy">
                <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
                   <!-- <li class="dropdown">
-                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">POST /exif/read<span class="caret"></span></a>
+                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">GET /exif/read<span class="caret"></span></a>
                      <ul class="dropdown-menu">
-                        <li><a href="#read_simple">POST /exif/read/simple</a></li>
-                        <li><a href="#read_all">POST /exif/read/all</a></li>
-                        <li><a href="#read_raw">POST /exif/read/raw</a></li>
+                        <li><a href="#read_simple">GET /exif/read/simple</a></li>
+                        <li><a href="#read_all">GET /exif/read/all</a></li>
+                        <li><a href="#read_raw">GET /exif/read/raw</a></li>
                      </ul>
                   </li> -->
-                  <li><a href="#read_simple">POST /exif/read/simple</a></li>
-                  <li><a href="#read_all">POST /exif/read/all</a></li>
-                  <li><a href="#read_raw">POST /exif/read/raw</a></li>
-                  <li><a href="#update">POST /exif/update</a></li>
-                  <li><a href="#copy">POST /exif/copy</a></li>
-                  <li><a href="#delete">POST /exif/delete</a></li>
+                  <li><a href="#upload">POST /exif/upload</a></li>
+                  <li><a href="#read_simple">GET /exif/read/simple</a></li>
+                  <li><a href="#read_all">GET /exif/read/all</a></li>
+                  <li><a href="#read_raw">GET /exif/read/raw</a></li>
+                  <li><a href="#copy">GET /exif/copy</a></li>
+                  <li><a href="#delete">GET /exif/delete</a></li>
                </ul>
             </nav>
             <div class="col-sm-9">
-               <h1>POST /exif/read</h1>
+                <div id="upload" class="section">
+                  <h2 >POST /exif/upload</h2>
+                    <h3>Definition</h3>
+                    <h3>Output</h3>
+                    <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+               </div>
+               <h1>GET /exif/read</h1>
                <div id="read_simple" class="section">
-                  <h2 >POST /exif/read/simple</h2>
+                  <h2 >GET /exif/read/simple/:hash</h2>
                      <h3>Definition</h3>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
@@ -106,11 +112,11 @@
                      </div>
                      <h3>Example</h3>
                      <div role="tabpanel" class="tab-pane fade in">
-                       <pre><code class="language-bash">curl -X POST -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/simple</code></pre>
+                       <pre><code class="language-bash">curl -X GET -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/simple</code></pre>
                      </div>
                 </div>
                <div id="read_all" class="section">
-                  <h2>POST /exif/read/all</h2>
+                  <h2>GET /exif/read/all</h2>
                      <h3>Definition</h3>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
@@ -131,11 +137,11 @@
                      </div>
                      <h3>Example</h3>
                      <div role="tabpanel" class="tab-pane fade in">
-                        <pre><code class="language-bash">curl -X POST -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/all</code></pre>
+                        <pre><code class="language-bash">curl -X GET -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/all</code></pre>
                      </div>
                </div>
                <div id="read_raw" class="section">
-                  <h2>POST /exif/read/raw</h2>
+                  <h2>GET /exif/read/raw</h2>
                      <h3>Definition</h3>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
@@ -156,23 +162,17 @@
                      </div>
                      <h3>Example</h3>
                      <div role="tabpanel" class="tab-pane fade in">
-                        <pre><code class="language-bash">curl -X POST -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/raw</code></pre>
+                        <pre><code class="language-bash">curl -X GET -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/raw</code></pre>
                     </div>
                </div>
-               <div id="update" class="section">
-                  <h2 >POST /exif/update</h2>
-                    <h3>Definition</h3>
-                    <h3>Output</h3>
-                    <p>Try to scroll this section and look at the navigation list while scrolling!</p>
-               </div>
                <div id="copy" class="section">
-                  <h2>POST /exif/copy</h2>
+                  <h2>GET /exif/copy</h2>
                   <h3>Definition</h3>
                   <h3>Output</h3>
                   <p>Try to scroll this section and look at the navigation list while scrolling!</p>
                </div>
                <div id="delete" class="section">
-                  <h2>POST /exif/delete</h2>
+                  <h2>GET /exif/delete</h2>
                   <h3>Definition</h3>
                   <h3>Output</h3>
                   <p>Try to scroll this section and look at the navigation list while scrolling!</p>
