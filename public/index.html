@@ -14,9 +14,11 @@
       <script src="js/prism.js"></script>
       <script src="js/json/simple/output200.js"></script>
       <script src="js/json/raw/output200.js"></script>
-      <script src="js/json/all/output200.js"></script>
+      <script src="js/json/full/output200.js"></script>
+      <script src="js/json/output404.js"></script>
       <script src="js/json/output422.js"></script>
       <script src="js/json/output500.js"></script>
+      <script src="js/json/outputFileHash.js"></script>
       <script>
          $(document).ready(function() {
          
@@ -29,16 +31,22 @@
          
            $("#simpleOutput500").text(JSON.stringify(JSONoutput500, null, 2));
            Prism.highlightElement($('#simpleOutput500')[0]);
+
+           $("#simpleOutput404").text(JSON.stringify(JSONoutput404, null, 2));
+           Prism.highlightElement($('#simpleOutput404')[0]);
          
-           // /read/all
-           $("#allOutput200").text(JSON.stringify(JSONallOutput200, null, 2));
-           Prism.highlightElement($('#allOutput200')[0]);
+           // /read/full
+           $("#fullOutput200").text(JSON.stringify(JSONfullOutput200, null, 2));
+           Prism.highlightElement($('#fullOutput200')[0]);
          
-           $("#allOutput422").text(JSON.stringify(JSONoutput422, null, 2));
-           Prism.highlightElement($('#allOutput422')[0]);
+           $("#fullOutput422").text(JSON.stringify(JSONoutput422, null, 2));
+           Prism.highlightElement($('#fullOutput422')[0]);
          
-           $("#allOutput500").text(JSON.stringify(JSONoutput500, null, 2));
-           Prism.highlightElement($('#allOutput500')[0]);
+           $("#fullOutput500").text(JSON.stringify(JSONoutput500, null, 2));
+           Prism.highlightElement($('#fullOutput500')[0]);
+         
+           $("#fullOutput404").text(JSON.stringify(JSONoutput404, null, 2));
+           Prism.highlightElement($('#fullOutput404')[0]);
          
            // /read/raw
            $("#rawOutput200").text(JSON.stringify(JSONrawOutput200, null, 2));
@@ -49,6 +57,15 @@
          
            $("#rawOutput500").text(JSON.stringify(JSONoutput500, null, 2));
            Prism.highlightElement($('#rawOutput500')[0]);
+         
+           $("#rawOutput404").text(JSON.stringify(JSONoutput404, null, 2));
+           Prism.highlightElement($('#rawOutput404')[0]);
+
+          $("#outputFileHash200").text(JSON.stringify(JSONFileHash200, null, 2));
+           Prism.highlightElement($('#outputFileHash200')[0]);
+
+          $("#outputFileHash500").text(JSON.stringify(JSONFileHash500, null, 2));
+           Prism.highlightElement($('#outputFileHash500')[0]);
          
          
          });
@@ -67,41 +84,60 @@
             <nav class="col-sm-3" id="scroll_spy">
                <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
                   <!-- <li class="dropdown">
-                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">GET /exif/read<span class="caret"></span></a>
+                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">GET /read<span class="caret"></span></a>
                      <ul class="dropdown-menu">
-                        <li><a href="#read_simple">GET /exif/read/simple</a></li>
-                        <li><a href="#read_all">GET /exif/read/all</a></li>
-                        <li><a href="#read_raw">GET /exif/read/raw</a></li>
+                        <li><a href="#read_simple">GET /read/simple</a></li>
+                        <li><a href="#read_full">GET /read/full</a></li>
+                        <li><a href="#read_raw">GET /read/raw</a></li>
                      </ul>
                   </li> -->
-                  <li><a href="#upload">POST /exif/upload</a></li>
-                  <li><a href="#read_simple">GET /exif/read/simple</a></li>
-                  <li><a href="#read_all">GET /exif/read/full</a></li>
-                  <li><a href="#read_raw">GET /exif/read/raw</a></li>
-                  <li><a href="#copy">GET /exif/copy</a></li>
-                  <li><a href="#delete">GET /exif/delete</a></li>
+                  <li><a href="#upload">POST /upload</a></li>
+                  <li><a href="#read_simple">GET /read/simple</a></li>
+                  <li><a href="#read_full">GET /read/full</a></li>
+                  <li><a href="#read_raw">GET /read/raw</a></li>
+                  <li><a href="#copy">GET /copy</a></li>
+                  <li><a href="#delete">GET /delete</a></li>
                </ul>
             </nav>
             <div class="col-sm-9">
                 <div id="upload" class="section">
-                  <h2 >POST /exif/upload</h2>
-                    <h3>Definition</h3>
-                    <h3>Output</h3>
-                    <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+                      <h2 >POST /upload/</h2>
+                         <h3>Definition</h3>
+                         <h3>Output</h3>
+                         <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item active"><a href="#outputFileHash200_output" aria-controls="outputFileHash200_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
+                            <li class="nav-item"><a href="#outputFileHash500_output" aria-controls="outputFileHash500_output" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error: Unable to upload file </a></li>
+                         </ul>
+                         <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="outputFileHash200_output">
+                               <pre><code id="outputFileHash200" class="language-json"></code></pre>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade in" id="outputFileHash500_output">
+                               <pre><code id="outputFileHash500" class="language-json"></code></pre>
+                            </div>
+                         </div>
+                         <h3>Example</h3>
+                         <div role="tabpanel" class="tab-pane fade in">
+                            <pre><code class="language-bash">curl -F "file=@test.jpeg" http://localhost:3000/upload</code></pre>
+                         </div>
                </div>
-               <h1>GET /exif/read</h1>
+               <h1>GET /read</h1>
                <div id="read_simple" class="section">
-                  <h2 >GET /exif/read/simple/:hash</h2>
+                  <h2 >GET /read/simple/:hash</h2>
                      <h3>Definition</h3>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item active"><a href="#simple_output" aria-controls="simple_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
+                        <li class="nav-item"><a href="#simple_not_found" aria-controls="simple_not_found" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 404 Not Found </a></li>
                         <li class="nav-item"><a href="#simple_unprocessable_entity" aria-controls="simple_unprocessable_entity" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 422 Unprocessable Entity </a></li>
                         <li class="nav-item"><a href="#simple_server_error" aria-controls="simple_server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
                      </ul>
                      <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="simple_output">
                            <pre><code id="simpleOutput200" class="language-json"></code></pre>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="simple_not_found">
+                           <pre><code id="simpleOutput404" class="language-json"></code></pre>
                         </div>
                         <div role="tabpanel" class="tab-pane fade in" id="simple_unprocessable_entity">
                            <pre><code id="simpleOutput422" class="language-json"></code></pre>
@@ -112,46 +148,54 @@
                      </div>
                      <h3>Example</h3>
                      <div role="tabpanel" class="tab-pane fade in">
-                       <pre><code class="language-bash">curl -X GET -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/simple</code></pre>
+                       <pre><code class="language-bash">curl http://localhost:3000/read/simple/6b72a79a3432f7990a5055bf03024109</code></pre>
                      </div>
                 </div>
-               <div id="read_all" class="section">
-                  <h2>GET /exif/read/full</h2>
+               <div id="read_full" class="section">
+                  <h2>GET /read/full</h2>
                      <h3>Definition</h3>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item active"><a href="#all_output" aria-controls="all_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
-                        <li class="nav-item"><a href="#all_unprocessable_entity" aria-controls="all_unprocessable_entity" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 422 Unprocessable Entity </a></li>
-                        <li class="nav-item"><a href="#all_server_error" aria-controls="all_server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
+                        <li class="nav-item active"><a href="#full_output" aria-controls="full_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
+                        <li class="nav-item"><a href="#full_not_found" aria-controls="full_not_found" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 404 Not Found </a></li>
+                        <li class="nav-item"><a href="#full_unprocessable_entity" aria-controls="full_unprocessable_entity" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 422 Unprocessable Entity </a></li>
+                        <li class="nav-item"><a href="#full_server_error" aria-controls="full_server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
                      </ul>
                      <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade in active" id="all_output">
-                           <pre><code id="allOutput200" class="language-json"></code></pre>
+                        <div role="tabpanel" class="tab-pane fade in active" id="full_output">
+                           <pre><code id="fullOutput200" class="language-json"></code></pre>
                         </div>
-                        <div role="tabpanel" class="tab-pane fade in" id="all_unprocessable_entity">
-                           <pre><code id="allOutput422" class="language-json"></code></pre>
+                        <div role="tabpanel" class="tab-pane fade in" id="full_not_found">
+                           <pre><code id="fullOutput404" class="language-json"></code></pre>
                         </div>
-                        <div role="tabpanel" class="tab-pane fade in" id="all_server_error">
-                           <pre><code id="allOutput500" class="language-json"></code></pre>
+                        <div role="tabpanel" class="tab-pane fade in" id="full_unprocessable_entity">
+                           <pre><code id="fullOutput422" class="language-json"></code></pre>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="full_server_error">
+                           <pre><code id="fullOutput500" class="language-json"></code></pre>
                         </div>
                      </div>
                      <h3>Example</h3>
                      <div role="tabpanel" class="tab-pane fade in">
-                        <pre><code class="language-bash">curl -X GET -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/full</code></pre>
+                        <pre><code class="language-bash">curl http://localhost:3000/read/full/6b72a79a3432f7990a5055bf03024109</code></pre>
                      </div>
                </div>
                <div id="read_raw" class="section">
-                  <h2>GET /exif/read/raw</h2>
+                  <h2>GET /read/raw</h2>
                      <h3>Definition</h3>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item active"><a href="#raw_output" aria-controls="raw_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
+                        <li class="nav-item"><a href="#raw_not_found" aria-controls="raw_not_found" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 404 Not Found </a></li>
                         <li class="nav-item"><a href="#raw_unprocessable_entity" aria-controls="raw_unprocessable_entity" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 422 Unprocessable Entity </a></li>
                         <li class="nav-item"><a href="#raw_server_error" aria-controls="raw_server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
                      </ul>
                      <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="raw_output">
                            <pre><code id="rawOutput200" class="language-json"></code></pre>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="raw_not_found">
+                           <pre><code id="rawOutput404" class="language-json"></code></pre>
                         </div>
                         <div role="tabpanel" class="tab-pane fade in" id="raw_unprocessable_entity">
                            <pre><code id="rawOutput422" class="language-json"></code></pre>
@@ -162,20 +206,26 @@
                      </div>
                      <h3>Example</h3>
                      <div role="tabpanel" class="tab-pane fade in">
-                        <pre><code class="language-bash">curl -X GET -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/raw</code></pre>
+                        <pre><code class="language-bash">curl http://localhost:3000/read/raw/6b72a79a3432f7990a5055bf03024109</code></pre>
                     </div>
                </div>
                <div id="copy" class="section">
-                  <h2>GET /exif/copy</h2>
+                  <h2>GET /copy</h2>
                   <h3>Definition</h3>
                   <h3>Output</h3>
                   <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+                  <div role="tabpanel" class="tab-pane fade in">
+                      <pre><code class="language-bash">curl http://localhost:3000/copy/6b72a79a3432f7990a5055bf03024109/a8e9cdfebfa47c9e574b7d0b97b42432</code></pre>
+                  </div>
                </div>
                <div id="delete" class="section">
-                  <h2>GET /exif/delete</h2>
+                  <h2>GET /delete</h2>
                   <h3>Definition</h3>
                   <h3>Output</h3>
                   <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+                  <div role="tabpanel" class="tab-pane fade in">
+                    <pre><code class="language-bash">curl http://localhost:3000/delete/6b72a79a3432f7990a5055bf03024109</code></pre>
+                  </div>
                </div>
             </div>
          </div>

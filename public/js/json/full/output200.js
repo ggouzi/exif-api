@@ -1,4 +1,4 @@
-var JSONallOutput200 = {
+var JSONfullOutput200 = {
     "file": {
         "bits_per_sample": 8,
         "file_access_date": "2018-03-03T22:50:00+00:00",

@@ -31,46 +31,46 @@ class ExifApiTest < Minitest::Test
         :file_hash  => ENV['HASH']
 	}.to_json
 	Time.stub :now, fixedTime do
-    	post '/exif/upload', "file" => Rack::Test::UploadedFile.new(filepath, "image/jpeg")
+    	post '/upload', "file" => Rack::Test::UploadedFile.new(filepath, "image/jpeg")
 	    assert last_response.body == expectedJSON
 	    assert last_response.status == 200
   	end
   end
 
   def test_read_simple
-    get "/exif/read/simple/#{ENV['HASH']}"
+    get "/read/simple/#{ENV['HASH']}"
     assert last_response.body.include?("file")
     assert last_response.status==200
   end
 
   def test_read_simple_not_found
-    get "/exif/read/simple/404"
+    get "/read/simple/404"
     expectedJSON = {:status => 404, :error => true, :message => "File not found"}.to_json
     assert last_response.body ==  expectedJSON
     assert last_response.status==404
   end
 
   def test_read_all
-    get "/exif/read/all/#{ENV['HASH']}"
+    get "/read/all/#{ENV['HASH']}"
     assert last_response.body.include?("file")
     assert last_response.status==200
   end
 
   def test_read_all_not_found
-    get "/exif/read/all/404"
+    get "/read/all/404"
     expectedJSON = {:status => 404, :error => true, :message => "File not found"}.to_json
     assert last_response.body ==  expectedJSON
     assert last_response.status==404
   end
 
    def test_read_raw
-    get "/exif/read/raw/#{ENV['HASH']}"
+    get "/read/raw/#{ENV['HASH']}"
     assert last_response.body.include?("file")
     assert last_response.status==200
   end
 
   def test_read_raw_not_found
-    get "/exif/read/raw/404"
+    get "/read/raw/404"
     expectedJSON = {:status => 404, :error => true, :message => "File not found"}.to_json
     assert last_response.body ==  expectedJSON
     assert last_response.status==404
@@ -79,7 +79,7 @@ class ExifApiTest < Minitest::Test
   def test_delete
    	fixedTime = Time.parse("2011-1-2 11:01:00")
    	Time.stub :now, fixedTime do
-	    get "/exif/delete/#{ENV['HASH']}"
+	    get "/delete/#{ENV['HASH']}"
 	    assert last_response.include?("Content-Type")
 	    assert last_response.include?("Content-Disposition")
 	  	assert last_response.content_type=="image/jpeg"

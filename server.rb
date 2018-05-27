@@ -9,62 +9,28 @@ EXCLUDE_LIST = [ 'thumbnail_image', 'data_dump' ]
 NIL_VALUES = [ "", " ", "Unknown", "Unknown ()", "n/a", "null" ]
 ENV["SAVE_DIR"] = "tmp"
 LIMIT_FILE_SIZE = 65*1024 # 65 MB MAX
+PORT = 3000
 
 
 class ExifApi < Sinatra::Base
-  set :port, 3000
+  set :port, PORT
 
   before do
     content_type :json
   end
 
-  get '/exif/read/simple/?' do
-    result = Utils.createJsonBody(404, "Route not found", true)
-    status Utils.getStatusCode(result)
-    result
-  end
-
-  get '/exif/read/all/?' do
-    result = Utils.createJsonBody(404, "Route not found", true)
-    status Utils.getStatusCode(result)
-    result
-  end
-
-  get '/exif/read/raw/?' do
-    result = Utils.createJsonBody(404, "Route not found", true)
-    status Utils.getStatusCode(result)
-    result
-  end
-
-  get '/exif/read/copy/?' do
-    result = Utils.createJsonBody(404, "Route not found", true)
-    status Utils.getStatusCode(result)
-    result
-  end
-
-  get '/exif/read/delete/?' do
-    result = Utils.createJsonBody(404, "Route not found", true)
-    status Utils.getStatusCode(result)
-    result
-  end
-
-  get '/exif/?' do
-    filepath = File.join('frontend', 'index.html')
-    if !File.file?(filepath)
-      status 400
-      result = createJsonBody(404, "File not found", true)
-    else
-      begin
-        send_file filepath
-      rescue Exception => e
-        puts e.message
-        status 500
-        result = Utils.createJsonBody(500, "Internal server error: Unable to load #{filepath}", true).to_json
-      end
+  get '/' do
+    content_type 'text/html'
+    begin
+      send_file File.expand_path('index.html', settings.public_folder)
+    rescue Exception => e
+      puts e.message
+      status 500
+      result = Utils.createJsonBody(500, "Internal server error: Unable to load main page", true).to_json
     end
   end
 
-  post '/exif/upload/?' do
+  post '/upload/?' do
     result = Utils.parseFileParam(params)
     if result.nil?
       tempfile = params[:file][:tempfile]
@@ -81,7 +47,7 @@ class ExifApi < Sinatra::Base
     result.to_json
   end
 
-  get '/exif/read/simple/:hash/?' do
+  get '/read/simple/:hash/?' do
       filepath, result = Utils.parseParams params[:hash]
       if result.nil?
         begin
@@ -95,7 +61,7 @@ class ExifApi < Sinatra::Base
       result.to_json
   end
 
-  get '/exif/read/full/:hash/?' do
+  get '/read/full/:hash/?' do
       filepath, result = Utils.parseParams params[:hash]
       if result.nil?
         begin
@@ -109,7 +75,7 @@ class ExifApi < Sinatra::Base
       result.to_json
   end
 
-  get '/exif/read/raw/:hash/?' do
+  get '/read/raw/:hash/?' do
       filepath, result = Utils.parseParams params[:hash]
       if result.nil?
         begin
@@ -123,7 +89,7 @@ class ExifApi < Sinatra::Base
     result.to_json
   end
 
-  get '/exif/copy/:hash_source/:hash_dest/?' do
+  get '/copy/:hash_source/:hash_dest/?' do
     filepathsource, result1 = Utils.parseParams params[:hash_source]
     filepathdest, result2 = Utils.parseParams params[:hash_dest]
     if !result1.nil?
@@ -148,7 +114,7 @@ class ExifApi < Sinatra::Base
     result.to_json
   end
 
-  get '/exif/delete/:hash/?' do
+  get '/delete/:hash/?' do
     filepath, result = Utils.parseParams params[:hash]
     if result.nil? && !filepath.nil?
       begin
