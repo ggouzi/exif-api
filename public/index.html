@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
-      <title>EXIF API</title>
+    <title>EXIF API</title>
       <meta charset="utf-8">
       <link rel="stylesheet" href="css/bootstrap-3.3.7.min.css">
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -93,7 +93,7 @@
    </head>
    <body data-spy="scroll" data-target="#scroll_spy" data-offset="0">
       <div class="container-fluid" style="background-color:#2196F3;color:#fff;height:160px;">
-         <h1>EXIF Data API</h1>
+         <h1><a href="https://github.com/ggouzi/exif-api" style="color:white" target="_blank">EXIF Data API</a></h1>
       </div>
       <br>
       <div class="container">
@@ -115,6 +115,10 @@
                 <div id="upload" class="section">
                       <h2 >POST /upload/</h2>
                          <h3>Definition</h3>
+                         <div>
+                          <p>Route to upload a file passed in parameter</p>
+                          <p>It will retrieve a hash Srting that will be used to reference this file on other routes</p>
+                         </div>
                          <h3>Output</h3>
                          <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item active"><a href="#outputFileHash200_output" aria-controls="outputFileHash200_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
@@ -149,6 +153,11 @@
                <div id="read_simple" class="section">
                   <h2 >GET /read/simple/:hash</h2>
                      <h3>Definition</h3>
+                      <div>
+                        <p>Route to retrieve only principal EXIF metadata from the file referenced by the hash parameter</p>
+                        <p>JSON output is structured in array of categories</p>
+                        <p>Non exhaustive list of all metadata found</p>
+                      </div>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item active"><a href="#simple_output" aria-controls="simple_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
@@ -172,8 +181,13 @@
                      </div>
                 </div>
                <div id="read_full" class="section">
-                  <h2>GET /read/full</h2>
+                  <h2>GET /read/full/:hash</h2>
                      <h3>Definition</h3>
+                      <div>
+                        <p>Route to retrieve a more complete list of EXIF metadata from the file referenced by the hash parameter</p>
+                        <p>JSON output is structured in array of categories</p>
+                        <p>Non exhaustive list of all metadata found</p>
+                      </div>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item active"><a href="#full_output" aria-controls="full_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
@@ -197,8 +211,13 @@
                      </div>
                </div>
                <div id="read_raw" class="section">
-                  <h2>GET /read/raw</h2>
+                  <h2>GET /read/raw/:hash</h2>
                      <h3>Definition</h3>
+                      <div>
+                        <p>Route to retrieve all EXIF metadata from the file referenced by the hash parameter</p>
+                        <p> JSON output in not structured and the list of metadata is not known in advance</p>
+                        <p>Exhaustive list of all metadata found</p>
+                      </div>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item active"><a href="#raw_output" aria-controls="raw_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
@@ -222,8 +241,12 @@
                     </div>
                </div>
                <div id="copy" class="section">
-                  <h2 >GET /copy/</h2>
+                  <h2 >GET /copy/:hash_source/:hash_dest</h2>
                      <h3>Definition</h3>
+                      <div>
+                        <p>Route to copy EXIF metadata from a source file into a destination file, both referenced by hash parameters</p>
+                        <p>The output is a copy of the destination file with EXIF metadata of the source file</p>
+                      </div>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item active"><a href="#copy_output" aria-controls="copy_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
@@ -246,8 +269,13 @@
                   </div>
                </div>
                <div id="delete" class="section">
-                  <h2 >GET /delete/</h2>
+                  <h2 >GET /delete/:hash</h2>
                      <h3>Definition</h3>
+                      <div>
+                        <p>Route to delete EXIF metadata from a file referenced by the hash parameter</p>
+                        <p>The output is a copy of the original file with EXIF metadata deleted</p>
+                        <p>Note: Few of them cannot be deleted (e.g: length, width, megapixels)</p>
+                      </div>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item active"><a href="#delete_output" aria-controls="delete_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
@@ -278,9 +306,6 @@
                <p>
                   API developped by Gaetan GOUZI
                   <a href="https://github.com/ggouzi" target="_blank"><i class="fa fa-2x fa-github"></i></a>
-               </p>
-               <p>Your feedback is important. Feel free to tell me what kind of improvment you would like, the bugs you have found or just your opinion about this API
-                  <a href="mailto:gouzi.gaetan@gmail.com">gouzi.gaetan@gmail.com</a>
                </p>
             </div>
          </footer>
