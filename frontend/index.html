@@ -76,7 +76,7 @@
                   </li> -->
                   <li><a href="#upload">POST /exif/upload</a></li>
                   <li><a href="#read_simple">GET /exif/read/simple</a></li>
-                  <li><a href="#read_all">GET /exif/read/all</a></li>
+                  <li><a href="#read_all">GET /exif/read/full</a></li>
                   <li><a href="#read_raw">GET /exif/read/raw</a></li>
                   <li><a href="#copy">GET /exif/copy</a></li>
                   <li><a href="#delete">GET /exif/delete</a></li>
@@ -116,7 +116,7 @@
                      </div>
                 </div>
                <div id="read_all" class="section">
-                  <h2>GET /exif/read/all</h2>
+                  <h2>GET /exif/read/full</h2>
                      <h3>Definition</h3>
                      <h3>Output</h3>
                      <ul class="nav nav-tabs" role="tablist">
@@ -137,7 +137,7 @@
                      </div>
                      <h3>Example</h3>
                      <div role="tabpanel" class="tab-pane fade in">
-                        <pre><code class="language-bash">curl -X GET -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/all</code></pre>
+                        <pre><code class="language-bash">curl -X GET -H Accept:application/json -F "file=@test.JPG" http://localhost:3000/exif/read/full</code></pre>
                      </div>
                </div>
                <div id="read_raw" class="section">

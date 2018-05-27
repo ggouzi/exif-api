@@ -17,14 +17,6 @@ def self.getFilename(filepath)
 end
 
 # ***** File *****
-def self.deleteFile(hash, dir)
-	FileUtils.rm(File.join(dir, hash))
-end
-
-def self.deleteFile(path)
-  FileUtils.rm(path)
-end
-
 def self.duplicateFile(file, filename, filedir)
   FileUtils.mkdir_p(filedir) unless File.exists?(filedir)
   hash = hashFile(file.path)
@@ -36,7 +28,20 @@ def self.duplicateFile(file, filename, filedir)
 end
 
 def self.hashFile(filename)
-  Digest::MD5.hexdigest(File.read(filename)+Time.now.to_s) # Include timestamp in the hash to ensure unicity
+  Digest::MD5.hexdigest(File.read(filename) + Time.now.to_s) # Include timestamp in the hash to ensure unicity
+end
+
+def self.getExtension(filename)
+    filename.split('.').last
+end
+
+def self.getMimeType(filename)
+  extension = getExtension(filename).downcase
+  mimeType = extension
+  if(extension!="png")
+    mimeType = "jpeg"
+  end
+  return mimeType
 end
 
 
@@ -45,7 +50,7 @@ def self.convertNilValues(hash)
   hash.each do |k, v|
     if v.is_a?(String)
       if NIL_VALUES.include? v
-        hash[k]=nil
+        hash[k] = nil
       end
     elsif v.is_a?(Hash)
       convertNilValues v
@@ -55,7 +60,7 @@ def self.convertNilValues(hash)
 end
 
 def self.hashToSnakeCase(hash)
-  newHash=Hash.new
+  newHash = Hash.new
   hash.each { |k,v| newHash[to_snake_case(k)]=v }
   return newHash
 end
@@ -94,7 +99,7 @@ def self.parseFileParam(params)
     if params[:file].include?('tempfile') && params[:file].include?('filename')  
       begin
         fileSize = File.size(params[:file][:tempfile]).to_f / 1024
-        if ObjectSpace.memsize_of(params[:file][:tempfile])>=LIMIT_FILE_SIZE
+        if ObjectSpace.memsize_of(params[:file][:tempfile]) >= LIMIT_FILE_SIZE
           result = {:status => 413, :message => "File size too large", :error => true}
         end
       rescue
