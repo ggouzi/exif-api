@@ -1,6 +1,5 @@
 require 'sinatra/base'
 require 'mini_exiftool'
-require 'objspace'
 require_relative 'utils'
 
 # Tags that are binary values
@@ -26,7 +25,7 @@ class ExifApi < Sinatra::Base
     rescue Exception => e
       puts e.message
       status 500
-      result = Utils.createJsonBody(500, "Internal server error: Unable to load main page", true).to_json
+      Utils.createJsonBody(500, "Internal server error: Unable to load main page", true).to_json
     end
   end
 
@@ -166,7 +165,6 @@ class ExifApi < Sinatra::Base
     camera = Hash.new
     gps = Hash.new
     technical = Hash.new
-    picture = Hash.new
 
     file[:file_size] = data.file_size.to_s
     file[:file_access_date] = DateTime.strptime(data.file_access_date.to_s, "%Y-%m-%d %H:%M:%s") rescue nil

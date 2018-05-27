@@ -1,5 +1,5 @@
 require 'fileutils'
-require 'digest/md5'
+require 'objspace'
 
 module Utils
 
@@ -22,7 +22,6 @@ def self.duplicateFile(file, filename, filedir)
   hash = hashFile(file.path)
   extension = File.extname(File.basename(file.path))
   newFileName = hash+extension
-  fileLocation = File.join(filedir, newFileName)
   FileUtils.cp(file.path, "./#{ENV['SAVE_DIR']}/#{newFileName}")
   return hash
 end
@@ -102,8 +101,7 @@ end
 def self.parseFileParam(params)
   result = nil
   if params.include?('file')
-    if params[:file].include?('tempfile') && params[:file].include?('filename')  
-        fileSize = File.size(params[:file][:tempfile]).to_f / 1024
+    if params[:file].include?('tempfile') && params[:file].include?('filename')
         if ObjectSpace.memsize_of(params[:file][:tempfile]) >= LIMIT_FILE_SIZE
           result = createJsonBody(413, "Request Entity Too Large: File size too large", true)
         end

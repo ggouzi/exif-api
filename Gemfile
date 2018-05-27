@@ -1,0 +1,10 @@
+source 'http://rubygems.org'
+
+gem 'fileutils'
+gem 'sinatra'
+gem 'mini_exiftool'
+gem 'minitest'
+gem 'minitest-hooks'
+gem 'rspec-mocks'
+gem 'rack-test'
+gem 'rake'

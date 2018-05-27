@@ -70,7 +70,7 @@ class ExifApiTest < Minitest::Test
     assert last_response.status==404
   end
 
-   def test_read_raw
+  def test_read_raw
     get "/read/raw/#{ENV['TEST_FILE']}"
     assert last_response.body.include?("file")
     assert last_response.status==200
