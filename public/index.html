@@ -16,18 +16,30 @@
       <script src="js/json/raw/output200.js"></script>
       <script src="js/json/full/output200.js"></script>
       <script src="js/json/output404.js"></script>
-      <script src="js/json/output422.js"></script>
       <script src="js/json/output500.js"></script>
-      <script src="js/json/outputFileHash.js"></script>
+      <script src="js/json/upload/outputFileHash.js"></script>
       <script>
          $(document).ready(function() {
          
+          // /upload
+          $("#outputFileHash200").text(JSON.stringify(JSONFileHash200, null, 2));
+          Prism.highlightElement($('#outputFileHash200')[0]);
+
+          $("#outputFileHash400").text(JSON.stringify(JSONFileHash400, null, 2));
+           Prism.highlightElement($('#outputFileHash400')[0]);
+
+          $("#outputFileHash413").text(JSON.stringify(JSONFileHash413, null, 2));
+           Prism.highlightElement($('#outputFileHash413')[0]);
+
+          $("#outputFileHash422").text(JSON.stringify(JSONFileHash422, null, 2));
+           Prism.highlightElement($('#outputFileHash422')[0]);
+
+          $("#outputFileHash500").text(JSON.stringify(JSONFileHash500, null, 2));
+           Prism.highlightElement($('#outputFileHash500')[0]);
+
            // /read/simple
            $("#simpleOutput200").text(JSON.stringify(JSONsimpleOutput200, null, 2));
            Prism.highlightElement($('#simpleOutput200')[0]);
-         
-           $("#simpleOutput422").text(JSON.stringify(JSONoutput422, null, 2));
-           Prism.highlightElement($('#simpleOutput422')[0]);
          
            $("#simpleOutput500").text(JSON.stringify(JSONoutput500, null, 2));
            Prism.highlightElement($('#simpleOutput500')[0]);
@@ -39,9 +51,6 @@
            $("#fullOutput200").text(JSON.stringify(JSONfullOutput200, null, 2));
            Prism.highlightElement($('#fullOutput200')[0]);
          
-           $("#fullOutput422").text(JSON.stringify(JSONoutput422, null, 2));
-           Prism.highlightElement($('#fullOutput422')[0]);
-         
            $("#fullOutput500").text(JSON.stringify(JSONoutput500, null, 2));
            Prism.highlightElement($('#fullOutput500')[0]);
          
@@ -52,21 +61,32 @@
            $("#rawOutput200").text(JSON.stringify(JSONrawOutput200, null, 2));
            Prism.highlightElement($('#rawOutput200')[0]);
          
-           $("#rawOutput422").text(JSON.stringify(JSONoutput422, null, 2));
-           Prism.highlightElement($('#rawOutput422')[0]);
-         
            $("#rawOutput500").text(JSON.stringify(JSONoutput500, null, 2));
            Prism.highlightElement($('#rawOutput500')[0]);
          
            $("#rawOutput404").text(JSON.stringify(JSONoutput404, null, 2));
            Prism.highlightElement($('#rawOutput404')[0]);
 
-          $("#outputFileHash200").text(JSON.stringify(JSONFileHash200, null, 2));
-           Prism.highlightElement($('#outputFileHash200')[0]);
+           // /copy
+           $("#copyOutput200").text("");
+           Prism.highlightElement($('#copyOutput200')[0]);
 
-          $("#outputFileHash500").text(JSON.stringify(JSONFileHash500, null, 2));
-           Prism.highlightElement($('#outputFileHash500')[0]);
-         
+           $("#copyOutput404").text(JSON.stringify(JSONoutput404, null, 2));
+           Prism.highlightElement($('#copyOutput404')[0]);
+
+           $("#copyOutput500").text(JSON.stringify(JSONoutput500, null, 2));
+           Prism.highlightElement($('#copyOutput500')[0]);
+
+
+           // /delete
+           $("#deleteOutput200").text("");
+           Prism.highlightElement($('#deleteOutput200')[0]);
+
+           $("#deleteOutput404").text(JSON.stringify(JSONoutput404, null, 2));
+           Prism.highlightElement($('#deleteOutput404')[0]);
+
+           $("#deleteOutput500").text(JSON.stringify(JSONoutput500, null, 2));
+           Prism.highlightElement($('#deleteOutput500')[0]);
          
          });
       </script>
@@ -81,16 +101,8 @@
             <h1 align="center">API Reference</h1>
          </div>
          <div class="row">
-            <nav class="col-sm-3" id="scroll_spy">
+            <nav class="col-sm-2" id="scroll_spy">
                <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="205">
-                  <!-- <li class="dropdown">
-                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">GET /read<span class="caret"></span></a>
-                     <ul class="dropdown-menu">
-                        <li><a href="#read_simple">GET /read/simple</a></li>
-                        <li><a href="#read_full">GET /read/full</a></li>
-                        <li><a href="#read_raw">GET /read/raw</a></li>
-                     </ul>
-                  </li> -->
                   <li><a href="#upload">POST /upload</a></li>
                   <li><a href="#read_simple">GET /read/simple</a></li>
                   <li><a href="#read_full">GET /read/full</a></li>
@@ -99,18 +111,30 @@
                   <li><a href="#delete">GET /delete</a></li>
                </ul>
             </nav>
-            <div class="col-sm-9">
+            <div class="col-sm-10">
                 <div id="upload" class="section">
                       <h2 >POST /upload/</h2>
                          <h3>Definition</h3>
                          <h3>Output</h3>
                          <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item active"><a href="#outputFileHash200_output" aria-controls="outputFileHash200_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
-                            <li class="nav-item"><a href="#outputFileHash500_output" aria-controls="outputFileHash500_output" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error: Unable to upload file </a></li>
+                            <li class="nav-item"><a href="#outputFileHash400_output" aria-controls="outputFileHash400_output" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 400 Bad Request </a></li>
+                            <li class="nav-item"><a href="#outputFileHash413_output" aria-controls="outputFileHash413_output" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 413 Request Entity Too Large </a></li>
+                            <li class="nav-item"><a href="#outputFileHash422_output" aria-controls="outputFileHash422_output" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 422 Unprocessable Entity</a></li>
+                            <li class="nav-item"><a href="#outputFileHash500_output" aria-controls="outputFileHash500_output" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error</a></li>
                          </ul>
                          <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="outputFileHash200_output">
                                <pre><code id="outputFileHash200" class="language-json"></code></pre>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade in" id="outputFileHash400_output">
+                               <pre><code id="outputFileHash400" class="language-json"></code></pre>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade in" id="outputFileHash413_output">
+                               <pre><code id="outputFileHash413" class="language-json"></code></pre>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade in" id="outputFileHash422_output">
+                               <pre><code id="outputFileHash422" class="language-json"></code></pre>
                             </div>
                             <div role="tabpanel" class="tab-pane fade in" id="outputFileHash500_output">
                                <pre><code id="outputFileHash500" class="language-json"></code></pre>
@@ -129,7 +153,6 @@
                      <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item active"><a href="#simple_output" aria-controls="simple_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
                         <li class="nav-item"><a href="#simple_not_found" aria-controls="simple_not_found" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 404 Not Found </a></li>
-                        <li class="nav-item"><a href="#simple_unprocessable_entity" aria-controls="simple_unprocessable_entity" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 422 Unprocessable Entity </a></li>
                         <li class="nav-item"><a href="#simple_server_error" aria-controls="simple_server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
                      </ul>
                      <div class="tab-content">
@@ -138,9 +161,6 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade in" id="simple_not_found">
                            <pre><code id="simpleOutput404" class="language-json"></code></pre>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade in" id="simple_unprocessable_entity">
-                           <pre><code id="simpleOutput422" class="language-json"></code></pre>
                         </div>
                         <div role="tabpanel" class="tab-pane fade in" id="simple_server_error">
                            <pre><code id="simpleOutput500" class="language-json"></code></pre>
@@ -158,7 +178,6 @@
                      <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item active"><a href="#full_output" aria-controls="full_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
                         <li class="nav-item"><a href="#full_not_found" aria-controls="full_not_found" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 404 Not Found </a></li>
-                        <li class="nav-item"><a href="#full_unprocessable_entity" aria-controls="full_unprocessable_entity" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 422 Unprocessable Entity </a></li>
                         <li class="nav-item"><a href="#full_server_error" aria-controls="full_server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
                      </ul>
                      <div class="tab-content">
@@ -167,9 +186,6 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade in" id="full_not_found">
                            <pre><code id="fullOutput404" class="language-json"></code></pre>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade in" id="full_unprocessable_entity">
-                           <pre><code id="fullOutput422" class="language-json"></code></pre>
                         </div>
                         <div role="tabpanel" class="tab-pane fade in" id="full_server_error">
                            <pre><code id="fullOutput500" class="language-json"></code></pre>
@@ -187,7 +203,6 @@
                      <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item active"><a href="#raw_output" aria-controls="raw_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
                         <li class="nav-item"><a href="#raw_not_found" aria-controls="raw_not_found" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 404 Not Found </a></li>
-                        <li class="nav-item"><a href="#raw_unprocessable_entity" aria-controls="raw_unprocessable_entity" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 422 Unprocessable Entity </a></li>
                         <li class="nav-item"><a href="#raw_server_error" aria-controls="raw_server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
                      </ul>
                      <div class="tab-content">
@@ -196,9 +211,6 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade in" id="raw_not_found">
                            <pre><code id="rawOutput404" class="language-json"></code></pre>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade in" id="raw_unprocessable_entity">
-                           <pre><code id="rawOutput422" class="language-json"></code></pre>
                         </div>
                         <div role="tabpanel" class="tab-pane fade in" id="raw_server_error">
                         <pre><code id="rawOutput500" class="language-json"></code></pre>
@@ -210,19 +222,50 @@
                     </div>
                </div>
                <div id="copy" class="section">
-                  <h2>GET /copy</h2>
-                  <h3>Definition</h3>
-                  <h3>Output</h3>
-                  <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+                  <h2 >GET /copy/</h2>
+                     <h3>Definition</h3>
+                     <h3>Output</h3>
+                     <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item active"><a href="#copy_output" aria-controls="copy_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
+                        <li class="nav-item"><a href="#copy_not_found" aria-controls="copy_not_found" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 404 Not Found </a></li>
+                        <li class="nav-item"><a href="#copy_server_error" aria-controls="copy_server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
+                     </ul>
+                     <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="copy_output">
+                           <pre><code id="copyOutput200" class="language-json"></code></pre>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="copy_not_found">
+                           <pre><code id="copyOutput404" class="language-json"></code></pre>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="copy_server_error">
+                           <pre><code id="copyOutput500" class="language-json"></code></pre>
+                        </div>
+                     </div>
                   <div role="tabpanel" class="tab-pane fade in">
                       <pre><code class="language-bash">curl http://localhost:3000/copy/6b72a79a3432f7990a5055bf03024109/a8e9cdfebfa47c9e574b7d0b97b42432</code></pre>
                   </div>
                </div>
                <div id="delete" class="section">
-                  <h2>GET /delete</h2>
-                  <h3>Definition</h3>
-                  <h3>Output</h3>
-                  <p>Try to scroll this section and look at the navigation list while scrolling!</p>
+                  <h2 >GET /delete/</h2>
+                     <h3>Definition</h3>
+                     <h3>Output</h3>
+                     <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item active"><a href="#delete_output" aria-controls="delete_output" role="tab" data-toggle="tab" aria-expanded="true"><span class="text-success">•</span> 200 OK </a></li>
+                        <li class="nav-item"><a href="#delete_not_found" aria-controls="delete_not_found" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 404 Not Found </a></li>
+                        <li class="nav-item"><a href="#delete_server_error" aria-controls="delete_server_error" role="tab" data-toggle="tab" aria-expanded="false"><span class="text-danger">•</span> 500 Internal Server Error </a></li>
+                     </ul>
+                     <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="delete_output">
+                           <pre><code id="deleteOutput200" class="language-json"></code></pre>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="delete_not_found">
+                           <pre><code id="deleteOutput404" class="language-json"></code></pre>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="delete_server_error">
+                           <pre><code id="deleteOutput500" class="language-json"></code></pre>
+                        </div>
+                     </div>
+                     <h3>Example</h3>
                   <div role="tabpanel" class="tab-pane fade in">
                     <pre><code class="language-bash">curl http://localhost:3000/delete/6b72a79a3432f7990a5055bf03024109</code></pre>
                   </div>

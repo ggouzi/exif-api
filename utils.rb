@@ -70,7 +70,13 @@ def self.createJsonBody(status, message, error)
 end
 
 def self.getStatusCode(result)
-  return result.key?(:status)? result[:status].to_i : 200
+  if (result.key?(:status) && result.key?(:error))
+    if (result[:error]==true)
+      return result[:status].to_i
+    else
+      result=200
+    end
+  end
 end
 
 def self.parseParams(hash)
@@ -97,19 +103,15 @@ def self.parseFileParam(params)
   result = nil
   if params.include?('file')
     if params[:file].include?('tempfile') && params[:file].include?('filename')  
-      begin
         fileSize = File.size(params[:file][:tempfile]).to_f / 1024
         if ObjectSpace.memsize_of(params[:file][:tempfile]) >= LIMIT_FILE_SIZE
-          result = {:status => 413, :message => "File size too large", :error => true}
+          result = createJsonBody(413, "Request Entity Too Large: File size too large", true)
         end
-      rescue
-        result = createJsonBody(500, "Internal server error", true)
-      end
     else
       result = createJsonBody(422, "Unprocessable Entity: File parameter is malformed", true)
     end
   else
-    result = createJsonBody(400, "Missing file parameter", true)
+    result = createJsonBody(400, "Bad Request: Missing file parameter", true)
   end
   return result
 end
