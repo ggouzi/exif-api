@@ -13,6 +13,7 @@ PORT = 3000
 
 class ExifApi < Sinatra::Base
   set :port, PORT
+  set :public_folder, 'docs'
 
   before do
     content_type :json
