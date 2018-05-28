@@ -15,21 +15,29 @@ EXIF API is based on open source projects:
 * [Ruby ExifTool wrapper](https://github.com/janfri/mini_exiftool)
 
 [See Gemfile](https://github.com/ggouzi/exif-api/blob/master/Gemfile)
+
+### Docker image
+
+```bash
+docker pull ggouzi/exif-api 
+docker run --rm --name exif-api -p 3000:3000 ggouzi/exif-api
+```
+
 ### Installation
 
 Install the dependencies:
 ```ruby
-$ bundle install
+bundle install
 ```
 
 Execute unit tests:
 ```ruby
-$ bundle exec rake test
+bundle exec rake test
 ```
 
 Launch the server:
 ```ruby
-$ bundle exec rackup
+bundle exec rackup
 ```
 
 ### Todos
