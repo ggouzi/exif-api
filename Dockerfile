@@ -2,7 +2,7 @@ FROM ruby:2.4.3
 MAINTAINER gouzi.gaetan@gmail.com
 
 RUN apt-get update && \
-    apt-get install -y net-tools
+    apt-get install -y net-tools libimage-exiftool-perl
 
 # Install gems
 ENV APP_HOME /app
@@ -17,4 +17,4 @@ COPY . $APP_HOME
 
 # Start server
 EXPOSE 3000
-CMD ["bundle", "exec", "rackup"]
+CMD ["bundle", "exec", "rackup", "-o", "0.0.0.0"]
